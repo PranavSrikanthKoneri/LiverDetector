@@ -3,7 +3,7 @@
 Segmentation integration check (all kept slices):
     python -m imaging.analyze case.zip --checkpoint /path/to/medsam_vit_b.pth
 
-The measurement pipeline will be added after this integration check.
+Includes the project-specified Dixon calculation; texture is still pending.
 """
 
 from pathlib import Path
@@ -135,6 +135,56 @@ def select_mask(candidate, ts_mask, box):
     return candidate.copy(), report
 
 
+def measure_fat_slice(ip_slice, op_slice, mask):
+    """Return fat percentage and pixel counts from one selected liver mask.
+
+    Inputs must be aligned magnitude MRI intensities on a comparable scale,
+    not independently normalized display images. This implements the project's
+    two-echo estimate, not a calibrated multi-echo PDFF measurement.
+    Erosion uses a disk of radius 3 pixels (not millimeters).
+    """
+    from scipy.ndimage import binary_erosion
+
+    ip = np.asarray(ip_slice, dtype=np.float64)
+    op = np.asarray(op_slice, dtype=np.float64)
+    mask = np.asarray(mask)
+    if ip.ndim != 2 or ip.shape != op.shape or ip.shape != mask.shape:
+        raise ValueError("IP, OP, and mask must have identical 2D shapes")
+    if not np.isfinite(mask).all() or not np.isin(mask, [0, 1]).all():
+        raise ValueError("Expected a finite binary liver mask")
+    yy, xx = np.ogrid[-3:4, -3:4]
+    eroded = binary_erosion(mask.astype(bool), structure=xx**2 + yy**2 <= 9,
+                            border_value=0)
+    eroded_pixels = int(eroded.sum())
+    if eroded_pixels == 0:
+        raise ValueError("No liver pixels remain after 3-pixel erosion")
+
+    # Exclude nonfinite or invalid magnitude signals, including zero IP.
+    valid = eroded & np.isfinite(ip) & np.isfinite(op) & (ip > 0) & (op >= 0)
+    with np.errstate(divide="ignore", invalid="ignore", over="ignore"):
+        fractions = (ip[valid] - op[valid]) / (2.0 * ip[valid])
+    fractions = fractions[np.isfinite(fractions)]
+    if fractions.size == 0:
+        raise ValueError("No valid Dixon pixels remain inside the eroded liver mask")
+    # Median first, clip second, then convert a fraction to percent: 0.10 -> 10%.
+    fat_pct = float(np.clip(np.median(fractions), 0.0, 0.5) * 100.0)
+    return fat_pct, {
+        "eroded_pixels": eroded_pixels,
+        "valid_pixels": int(fractions.size),
+        "excluded_pixels": eroded_pixels - int(fractions.size),
+    }
+
+
+def summarize_fat(slice_percentages):
+    """Equally weight per-slice medians, then apply the strict >5% threshold."""
+    values = np.asarray(slice_percentages, dtype=np.float64)
+    if (values.ndim != 1 or values.size == 0 or not np.isfinite(values).all()
+            or ((values < 0) | (values > 50)).any()):
+        raise ValueError("Expected nonempty slice fat percentages in [0, 50]")
+    fat_pct = float(values.mean())
+    return {"fat_pct": fat_pct, "steatosis": bool(fat_pct > 5.0)}
+
+
 def main():
     """Check kept liver slices; save candidate/selected masks and diagnostics."""
     import argparse
@@ -159,12 +209,21 @@ def main():
     output = Path(args.out)
     output.mkdir(parents=True, exist_ok=True)
     reports = {}
+    slice_percentages = []
     for idx in slices:
         image, box = inputs["ip"][idx], inputs["boxes"][idx]
         print(f"Running MedSAM on slice {idx}, box {box}", flush=True)
         candidate = segment_slice(image, box, model)
         mask, report = select_mask(candidate, inputs["ts_mask"][idx], box)
         report["selected_pixels"] = int(mask.sum())
+        try:
+            fat_pct, counts = measure_fat_slice(image, inputs["op"][idx], mask)
+        except ValueError as exc:
+            # Do not silently drop a kept slice or substitute a zero measurement.
+            raise ValueError(f"Cannot measure fat on slice {idx}: {exc}") from exc
+        report["fat_pct"] = fat_pct
+        report["fat_measurement"] = counts
+        slice_percentages.append(fat_pct)
         reports[str(idx)] = report
         np.save(output / f"medsam_{idx:03d}.npy", candidate)
         np.save(output / f"mask_{idx:03d}.npy", mask)
@@ -185,6 +244,9 @@ def main():
             raise OSError(f"Could not save preview: {path}")
         print(f"Slice {idx}: {json.dumps(report)}", flush=True)
     (output / "quality_report.json").write_text(json.dumps(reports, indent=2), encoding="utf-8")
+    summary = summarize_fat(slice_percentages)
+    (output / "fat_summary.json").write_text(json.dumps(summary, indent=2), encoding="utf-8")
+    print(f"Fat summary: {json.dumps(summary)}")
     print(f"Saved masks and quality_report.json to {output}")
     print("Previews: yellow = MedSAM candidate; green = TotalSegmentator; red = box")
 
