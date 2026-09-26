@@ -4,6 +4,7 @@ Privacy: only technical DICOM tags are read below (series UID, echo time,
 geometry). Patient-identifying tags are never read, printed or returned.
 """
 import os
+import tempfile
 import zipfile
 from collections import defaultdict
 
@@ -155,3 +156,95 @@ def read_volume(files: list) -> sitk.Image:
     reader = sitk.ImageSeriesReader()
     reader.SetFileNames(files)
     return sitk.Cast(reader.Execute(), sitk.sitkFloat32)
+
+
+# ------------------------------------------------------- liver localisation
+
+def run_totalsegmentator(ip_img: sitk.Image, work_dir: str) -> sitk.Image:
+    """Liver mask from TotalSegmentator (MR model), resampled onto the ip grid."""
+    from totalsegmentator.python_api import totalsegmentator  # heavy import (torch)
+
+    in_nii = os.path.join(work_dir, "ip.nii.gz")
+    out_dir = os.path.join(work_dir, "ts")
+    sitk.WriteImage(ip_img, in_nii)
+
+    _log("running TotalSegmentator (task=total_mr, roi=liver); first run on CPU takes ~1 min")
+    try:
+        totalsegmentator(in_nii, out_dir, task="total_mr", roi_subset=["liver"], fast=True, quiet=True)
+    except Exception as e:
+        _log(f"fast mode failed ({e.__class__.__name__}), retrying at full resolution")
+        totalsegmentator(in_nii, out_dir, task="total_mr", roi_subset=["liver"], quiet=True)
+
+    mask = sitk.ReadImage(os.path.join(out_dir, "liver.nii.gz"))
+    if mask.GetSize() != ip_img.GetSize():
+        _log(f"mask size {mask.GetSize()} != image size {ip_img.GetSize()}, resampling")
+    # Nearest-neighbour resample onto the exact ip grid (identity if already equal).
+    return sitk.Resample(mask, ip_img, sitk.Transform(), sitk.sitkNearestNeighbor, 0, sitk.sitkUInt8)
+
+
+def select_slices_and_boxes(mask: np.ndarray, n: int = 5, margin: int = 5):
+    """Top-n z-slices by liver area (sorted), and a padded box per slice.
+
+    Box format: [x_min, y_min, x_max, y_max] in pixel coords, clipped to the image.
+    """
+    _, h, w = mask.shape
+    areas = mask.sum(axis=(1, 2))
+    top = [int(i) for i in np.argsort(areas)[::-1][:n] if areas[i] > 0]
+    slices = sorted(top)
+
+    boxes = {}
+    for s in slices:
+        ys, xs = np.nonzero(mask[s])
+        boxes[s] = [
+            max(int(xs.min()) - margin, 0), max(int(ys.min()) - margin, 0),
+            min(int(xs.max()) + margin, w - 1), min(int(ys.max()) + margin, h - 1),
+        ]
+    return slices, boxes
+
+
+# ------------------------------------------------------------ public entry
+
+def load_and_locate(zip_path: str) -> dict:
+    """DICOM zip -> aligned in/opposed-phase volumes, liver mask, top slices and boxes.
+
+    All arrays are (z, y, x). Raises ValueError with a readable message if the
+    zip has no DICOMs, no in/opposed-phase pair, or no liver is found.
+    """
+    with tempfile.TemporaryDirectory(prefix="livercast_") as tmp:
+        dicom_dir = os.path.join(tmp, "dicom")
+        _unzip(zip_path, dicom_dir)
+
+        groups = scan_series(dicom_dir)
+        if not groups:
+            raise ValueError("No DICOM images found in the uploaded zip.")
+        _log(f"found {len(groups)} image series/echo groups")
+        ip_group, op_group = find_ip_op_pair(groups)
+
+        # Both volumes read by SimpleITK from sorted file lists -> same grid as the mask.
+        ip_img = read_volume(ip_group["files"])
+        op_img = read_volume(op_group["files"])
+        if ip_img.GetSize() != op_img.GetSize():
+            raise ValueError("In-phase and opposed-phase series have different sizes.")
+
+        mask_img = run_totalsegmentator(ip_img, tmp)
+
+        ip = sitk.GetArrayFromImage(ip_img).astype(np.float32)
+        op = sitk.GetArrayFromImage(op_img).astype(np.float32)
+        ts_mask = (sitk.GetArrayFromImage(mask_img) > 0).astype(np.uint8)
+        sx, sy, sz = ip_img.GetSpacing()
+
+    if not ts_mask.any():
+        raise ValueError("No liver detected in the in-phase MRI. Is this an abdominal scan?")
+    assert ts_mask.shape == ip.shape == op.shape
+
+    liver_slices, boxes = select_slices_and_boxes(ts_mask)
+    _log(f"liver on {int((ts_mask.sum(axis=(1, 2)) > 0).sum())}/{ts_mask.shape[0]} slices; "
+         f"kept {liver_slices}")
+    return {
+        "ip": ip,
+        "op": op,
+        "liver_slices": liver_slices,
+        "boxes": boxes,
+        "ts_mask": ts_mask,
+        "spacing": (float(sz), float(sy), float(sx)),
+    }
