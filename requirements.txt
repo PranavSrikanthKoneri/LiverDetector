@@ -1,0 +1,7 @@
+# imaging (Person 1): DICOM loading + TotalSegmentator liver localisation
+TotalSegmentator>=2.4
+SimpleITK
+pydicom
+numpy
+opencv-python-headless
+pytest
