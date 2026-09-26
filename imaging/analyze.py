@@ -136,7 +136,7 @@ def select_mask(candidate, ts_mask, box):
 
 
 def measure_fat_slice(ip_slice, op_slice, mask):
-    """Return fat percentage and pixel counts from one selected liver mask.
+    """Return fat percentage and diagnostics from one selected liver mask.
 
     Inputs must be aligned magnitude MRI intensities on a comparable scale,
     not independently normalized display images. This implements the project's
@@ -161,17 +161,28 @@ def measure_fat_slice(ip_slice, op_slice, mask):
 
     # Exclude nonfinite or invalid magnitude signals, including zero IP.
     valid = eroded & np.isfinite(ip) & np.isfinite(op) & (ip > 0) & (op >= 0)
+    ip_values, op_values = ip[valid], op[valid]
     with np.errstate(divide="ignore", invalid="ignore", over="ignore"):
-        fractions = (ip[valid] - op[valid]) / (2.0 * ip[valid])
-    fractions = fractions[np.isfinite(fractions)]
+        fractions = (ip_values - op_values) / (2.0 * ip_values)
+    finite = np.isfinite(fractions)
+    fractions = fractions[finite]
+    ip_values, op_values = ip_values[finite], op_values[finite]
     if fractions.size == 0:
         raise ValueError("No valid Dixon pixels remain inside the eroded liver mask")
     # Median first, clip second, then convert a fraction to percent: 0.10 -> 10%.
-    fat_pct = float(np.clip(np.median(fractions), 0.0, 0.5) * 100.0)
+    median_fraction = float(np.median(fractions))
+    fat_pct = float(np.clip(median_fraction, 0.0, 0.5) * 100.0)
     return fat_pct, {
         "eroded_pixels": eroded_pixels,
         "valid_pixels": int(fractions.size),
         "excluded_pixels": eroded_pixels - int(fractions.size),
+        "unclipped_fat_pct": median_fraction * 100.0,
+        "clipped_to_zero": bool(median_fraction < 0),
+        "ip_median": float(np.median(ip_values)),
+        "op_median": float(np.median(op_values)),
+        "op_greater_than_ip_fraction": float(np.mean(op_values > ip_values)),
+        # A clipped result must not silently look like a measured absence of fat.
+        "warnings": ["negative_dixon_median_clipped_to_zero"] if median_fraction < 0 else [],
     }
 
 

@@ -65,7 +65,8 @@ def test_dixon_uses_eroded_liver_pixels_and_preserves_inputs():
     before = op.copy()
     pct, counts = measure_fat_slice(ip, op, mask)
     assert pct == pytest.approx(10)
-    assert counts == {"eroded_pixels": 196, "valid_pixels": 196, "excluded_pixels": 0}
+    assert counts["eroded_pixels"] == counts["valid_pixels"] == 196
+    assert counts["excluded_pixels"] == 0
     np.testing.assert_array_equal(op, before)
     assert mask.sum() == 400
 
@@ -113,3 +114,16 @@ def test_fat_averages_slices_and_uses_strict_threshold():
     for invalid in ([], [np.nan], [-1], [51]):
         with pytest.raises(ValueError):
             summarize_fat(invalid)
+
+
+@pytest.mark.parametrize("op_value, raw_pct, clipped", [(100, 0, False), (120, -10, True)])
+def test_diagnostics_distinguish_zero_from_negative_clipping(op_value, raw_pct, clipped):
+    ip = np.full((40, 40), 100.0)
+    pct, report = measure_fat_slice(ip, np.full_like(ip, op_value), reference())
+    assert pct == 0
+    assert report["unclipped_fat_pct"] == pytest.approx(raw_pct)
+    assert report["clipped_to_zero"] is clipped
+    assert report["ip_median"] == 100
+    assert report["op_median"] == op_value
+    assert report["op_greater_than_ip_fraction"] == float(clipped)
+    assert bool(report["warnings"]) is clipped
