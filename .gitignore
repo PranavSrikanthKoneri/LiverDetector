@@ -3,3 +3,21 @@ data/
 *.pth
 __pycache__/
 .DS_Store
+
+# Medical data: never commit images or DICOMs
+*.zip
+*.dcm
+*.nii
+*.nii.gz
+debug/
+
+# Model weights
+*.onnx
+*.ckpt
+*.safetensors
+.totalsegmentator/
+
+# Python
+.venv/
+*.pyc
+.pytest_cache/
