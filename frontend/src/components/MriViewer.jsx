@@ -19,9 +19,11 @@ export default function MriViewer({ segmentation, caseLabel = "Unidentified uplo
           <h3>Case: {caseLabel}</h3>
           <p>Actual scan · Slice index {index}</p>
         </div>
-        <label><input type="checkbox" checked={overlay} onChange={e => setOverlay(e.target.checked)} /> Selected mask</label>
       </div>
-      <label className="mri-projection-control"><input type="checkbox" checked={visualize} disabled={!canVisualize} onChange={event => setVisualize(event.target.checked)} /> Visualize projection (illustrative)</label>
+      <div className="mri-controls">
+        <label className="mri-control"><input type="checkbox" checked={overlay} onChange={e => setOverlay(e.target.checked)} /><span>Selected mask</span></label>
+        <label className="mri-control"><input type="checkbox" checked={visualize} disabled={!canVisualize} onChange={event => setVisualize(event.target.checked)} /><span>Visualize projection (illustrative)</span></label>
+      </div>
       {!canVisualize && <small className="text-tertiary">Run an analysis with the updated backend to enable the projection overlay.</small>}
       {showingProjection && <p className="mri-projection-caption">Illustrative overlay · Year {years} · {lifestyleScenario ? "Healthy lifestyle scenario" : "Baseline scenario"} · Projected stage {projectedStageValue.toFixed(2)}</p>}
       <div className="mri-scan-frame">
