@@ -5,3 +5,8 @@ pydicom
 numpy
 opencv-python-headless
 pytest
+# tabular (Person 3): NHANES fibrosis-stage model (Mac: brew install libomp for xgboost)
+pandas
+scikit-learn
+xgboost>=3.2,<4  # risk_model.joblib was saved with 3.2
+joblib
