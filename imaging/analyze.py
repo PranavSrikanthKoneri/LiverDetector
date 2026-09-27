@@ -197,7 +197,7 @@ def summarize_fat(slice_percentages):
 
 
 
-def measure_texture_slice(ip_slice, mask):
+def measure_texture_slice(ip_slice, mask, *, erosion_radius_pixels=3):
     """Exploratory liver texture, not a staging or image-quality score.
 
     Symmetric 32-level GLCMs use only pairs whose endpoints are both inside
@@ -214,8 +214,12 @@ def measure_texture_slice(ip_slice, mask):
         raise ValueError("IP and mask must have identical 2D shapes")
     if not np.isfinite(mask).all() or not np.isin(mask, [0, 1]).all():
         raise ValueError("Expected a finite binary liver mask")
-    yy, xx = np.ogrid[-3:4, -3:4]
-    eroded = binary_erosion(mask.astype(bool), structure=xx**2 + yy**2 <= 9,
+    if not np.isfinite(erosion_radius_pixels) or erosion_radius_pixels < 0:
+        raise ValueError("Erosion radius must be finite and nonnegative")
+    radius = int(np.ceil(erosion_radius_pixels))
+    yy, xx = np.ogrid[-radius:radius+1, -radius:radius+1]
+    eroded = binary_erosion(mask.astype(bool),
+                            structure=xx**2 + yy**2 <= erosion_radius_pixels**2,
                             border_value=0)
     valid = eroded & np.isfinite(image) & (image >= 0)
     if not valid.any():
@@ -256,7 +260,7 @@ def measure_texture_slice(ip_slice, mask):
         pair_counts.append(count)
     return summarize_texture(directions), {
         "label": "exploratory", "input": "in_phase",
-        "gray_levels": 32, "erosion_radius_pixels": 3,
+        "gray_levels": 32, "erosion_radius_pixels": erosion_radius_pixels,
         "window_method": "per_slice_roi_percentiles_1_99_with_minmax_fallback",
         "window_low": float(lo), "window_high": float(hi),
         "valid_pixels": int(valid.sum()),
@@ -305,11 +309,13 @@ def main():
     reports = {}
     slice_percentages = []
     slice_textures = []
+    selected_masks = {}
     for idx in slices:
         image, box = inputs["ip"][idx], inputs["boxes"][idx]
         print(f"Running MedSAM on slice {idx}, box {box}", flush=True)
         candidate = segment_slice(image, box, model)
         mask, report = select_mask(candidate, inputs["ts_mask"][idx], box)
+        selected_masks[int(idx)] = mask
         report["selected_pixels"] = int(mask.sum())
         try:
             fat_pct, counts = measure_fat_slice(image, inputs["op"][idx], mask)
@@ -350,6 +356,18 @@ def main():
                        "slices": [int(idx) for idx in slices]}
     (output / "texture_summary.json").write_text(
         json.dumps(texture_summary, indent=2), encoding="utf-8")
+    from imaging.chaos_texture_qc import volume_record, DEFAULT_REFERENCE
+    from imaging.texture_quality import compare_quality
+    qc = volume_record("input_scan", inputs["ip"], selected_masks,
+                       inputs["spacing"][::-1], "selected_model_masks")
+    if DEFAULT_REFERENCE.exists():
+        reference = json.loads(DEFAULT_REFERENCE.read_text())
+        qc["reference_context"] = compare_quality(qc, reference["records"])
+    else:
+        qc["reference_context"] = {"status": "reference_unavailable"}
+    (output / "texture_quality.json").write_text(
+        json.dumps(qc, indent=2, allow_nan=False), encoding="utf-8")
+    print(f"Texture measurement QC: {qc['quality']['status']}; {qc['quality']['flags']}")
     print(f"Exploratory texture: {json.dumps(texture_summary)}")
     print(f"Fat summary: {json.dumps(summary)}")
     print(f"Saved masks and quality_report.json to {output}")

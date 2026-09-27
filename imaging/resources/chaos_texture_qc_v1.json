@@ -1,0 +1,622 @@
+{
+  "method": "texture_qc_v1_2mm_linear_32bins_6mm_erosion",
+  "source": "https://zenodo.org/records/3431873",
+  "source_archive_md5": "df21053002a1cc86df918a87da3b2c19",
+  "description": "Derived numerical texture measurement QC from 20 CHAOS training patients; five largest expert liver-mask slices per patient. Not clinical quality labels.",
+  "records": [
+    {
+      "case_id": "chaos_1",
+      "image_fingerprint": "e7826d0e800ef203a3f38e0a51efb657947ef3badc969cc32c8eb3a670133786",
+      "mask_source": "CHAOS_expert_liver",
+      "spacing_xyz": [
+        1.89453125,
+        1.89453125,
+        5.500000224394059
+      ],
+      "quality": {
+        "method": "texture_qc_v1_2mm_linear_32bins_6mm_erosion",
+        "label": "exploratory_measurement_quality",
+        "status": "review_required",
+        "flags": [
+          "spacing_sensitive"
+        ],
+        "policy": {
+          "minimum_roi_pixels": 128,
+          "minimum_pairs_per_direction": 100,
+          "relative_sensitivity_review": 0.25
+        },
+        "slice_count": 5,
+        "texture_2mm": {
+          "contrast": 12.078685493348527,
+          "homogeneity": 0.39445226526117905,
+          "entropy": 7.717159792926753
+        },
+        "boundary_sensitivity_max": 0.20349966876713915,
+        "spacing_sensitivity_max": 0.25375674505444196,
+        "interpretation": "Checks measurement stability only. No flags does not establish healthy liver, absence of motion, correct segmentation, or diagnostic image quality."
+      }
+    },
+    {
+      "case_id": "chaos_10",
+      "image_fingerprint": "566bc6bbed2858f91bdc954539952a39358694462b5b6c500fb9edaf0586431b",
+      "mask_source": "CHAOS_expert_liver",
+      "spacing_xyz": [
+        1.89453125,
+        1.89453125,
+        5.500000155701836
+      ],
+      "quality": {
+        "method": "texture_qc_v1_2mm_linear_32bins_6mm_erosion",
+        "label": "exploratory_measurement_quality",
+        "status": "no_flags_detected",
+        "flags": [],
+        "policy": {
+          "minimum_roi_pixels": 128,
+          "minimum_pairs_per_direction": 100,
+          "relative_sensitivity_review": 0.25
+        },
+        "slice_count": 5,
+        "texture_2mm": {
+          "contrast": 11.685243598126167,
+          "homogeneity": 0.4319488037868896,
+          "entropy": 7.491469650701544
+        },
+        "boundary_sensitivity_max": 0.04186550062701772,
+        "spacing_sensitivity_max": 0.21770002787664028,
+        "interpretation": "Checks measurement stability only. No flags does not establish healthy liver, absence of motion, correct segmentation, or diagnostic image quality."
+      }
+    },
+    {
+      "case_id": "chaos_13",
+      "image_fingerprint": "faefd8a8e6130a9b995e0e5a664b72b22893d19b808869ac25894340ab428be7",
+      "mask_source": "CHAOS_expert_liver",
+      "spacing_xyz": [
+        1.44097220897674,
+        1.44097220897674,
+        8.999999999999655
+      ],
+      "quality": {
+        "method": "texture_qc_v1_2mm_linear_32bins_6mm_erosion",
+        "label": "exploratory_measurement_quality",
+        "status": "no_flags_detected",
+        "flags": [],
+        "policy": {
+          "minimum_roi_pixels": 128,
+          "minimum_pairs_per_direction": 100,
+          "relative_sensitivity_review": 0.25
+        },
+        "slice_count": 5,
+        "texture_2mm": {
+          "contrast": 14.47298523800472,
+          "homogeneity": 0.34163922108680683,
+          "entropy": 8.2106469578141
+        },
+        "boundary_sensitivity_max": 0.10066541328805041,
+        "spacing_sensitivity_max": 0.2272867336738965,
+        "interpretation": "Checks measurement stability only. No flags does not establish healthy liver, absence of motion, correct segmentation, or diagnostic image quality."
+      }
+    },
+    {
+      "case_id": "chaos_15",
+      "image_fingerprint": "b4aec4b64427529ba179ac3abc0780a7a2b188186bad7f5a563f146d3cfde368",
+      "mask_source": "CHAOS_expert_liver",
+      "spacing_xyz": [
+        1.69921875,
+        1.69921875,
+        9.00000030517592
+      ],
+      "quality": {
+        "method": "texture_qc_v1_2mm_linear_32bins_6mm_erosion",
+        "label": "exploratory_measurement_quality",
+        "status": "review_required",
+        "flags": [
+          "boundary_sensitive"
+        ],
+        "policy": {
+          "minimum_roi_pixels": 128,
+          "minimum_pairs_per_direction": 100,
+          "relative_sensitivity_review": 0.25
+        },
+        "slice_count": 5,
+        "texture_2mm": {
+          "contrast": 8.295330806905897,
+          "homogeneity": 0.42761432918069764,
+          "entropy": 7.565602952355884
+        },
+        "boundary_sensitivity_max": 0.28501825999451524,
+        "spacing_sensitivity_max": 0.22753814446558673,
+        "interpretation": "Checks measurement stability only. No flags does not establish healthy liver, absence of motion, correct segmentation, or diagnostic image quality."
+      }
+    },
+    {
+      "case_id": "chaos_19",
+      "image_fingerprint": "227a1140d5de2cf01b0d4bca8fb94718cb6bce9fb8df7c32a980f735bd85b887",
+      "mask_source": "CHAOS_expert_liver",
+      "spacing_xyz": [
+        1.44097220897674,
+        1.44097220897674,
+        8.999999999999863
+      ],
+      "quality": {
+        "method": "texture_qc_v1_2mm_linear_32bins_6mm_erosion",
+        "label": "exploratory_measurement_quality",
+        "status": "no_flags_detected",
+        "flags": [],
+        "policy": {
+          "minimum_roi_pixels": 128,
+          "minimum_pairs_per_direction": 100,
+          "relative_sensitivity_review": 0.25
+        },
+        "slice_count": 5,
+        "texture_2mm": {
+          "contrast": 14.872806613119952,
+          "homogeneity": 0.35439334876166706,
+          "entropy": 8.053202445838913
+        },
+        "boundary_sensitivity_max": 0.112228070235595,
+        "spacing_sensitivity_max": 0.23212372171647294,
+        "interpretation": "Checks measurement stability only. No flags does not establish healthy liver, absence of motion, correct segmentation, or diagnostic image quality."
+      }
+    },
+    {
+      "case_id": "chaos_2",
+      "image_fingerprint": "6d6e521ce4bf1c40c61e61cd3e44d9a3c7b43c7a105b982ac39f18c1125be48b",
+      "mask_source": "CHAOS_expert_liver",
+      "spacing_xyz": [
+        1.44097220897674,
+        1.44097220897674,
+        8.999999829149031
+      ],
+      "quality": {
+        "method": "texture_qc_v1_2mm_linear_32bins_6mm_erosion",
+        "label": "exploratory_measurement_quality",
+        "status": "no_flags_detected",
+        "flags": [],
+        "policy": {
+          "minimum_roi_pixels": 128,
+          "minimum_pairs_per_direction": 100,
+          "relative_sensitivity_review": 0.25
+        },
+        "slice_count": 5,
+        "texture_2mm": {
+          "contrast": 14.0016561303711,
+          "homogeneity": 0.3412468545622711,
+          "entropy": 7.798847068863845
+        },
+        "boundary_sensitivity_max": 0.11407199725543347,
+        "spacing_sensitivity_max": 0.1925378005845928,
+        "interpretation": "Checks measurement stability only. No flags does not establish healthy liver, absence of motion, correct segmentation, or diagnostic image quality."
+      }
+    },
+    {
+      "case_id": "chaos_20",
+      "image_fingerprint": "8a14f2b86c8baa059274165a3f6384fc49b60f7f0f213d783ca299d4a1d11050",
+      "mask_source": "CHAOS_expert_liver",
+      "spacing_xyz": [
+        1.44097220897674,
+        1.44097220897674,
+        9.0
+      ],
+      "quality": {
+        "method": "texture_qc_v1_2mm_linear_32bins_6mm_erosion",
+        "label": "exploratory_measurement_quality",
+        "status": "no_flags_detected",
+        "flags": [],
+        "policy": {
+          "minimum_roi_pixels": 128,
+          "minimum_pairs_per_direction": 100,
+          "relative_sensitivity_review": 0.25
+        },
+        "slice_count": 5,
+        "texture_2mm": {
+          "contrast": 15.122972712256598,
+          "homogeneity": 0.3490452253655033,
+          "entropy": 8.084312961681679
+        },
+        "boundary_sensitivity_max": 0.12811754188157332,
+        "spacing_sensitivity_max": 0.18583194754167365,
+        "interpretation": "Checks measurement stability only. No flags does not establish healthy liver, absence of motion, correct segmentation, or diagnostic image quality."
+      }
+    },
+    {
+      "case_id": "chaos_21",
+      "image_fingerprint": "089b423ada06e7de1aa2024fe235b42f14a41df9624c90538de80c54094fc726",
+      "mask_source": "CHAOS_expert_liver",
+      "spacing_xyz": [
+        1.81640625,
+        1.81640625,
+        7.999999792812134
+      ],
+      "quality": {
+        "method": "texture_qc_v1_2mm_linear_32bins_6mm_erosion",
+        "label": "exploratory_measurement_quality",
+        "status": "no_flags_detected",
+        "flags": [],
+        "policy": {
+          "minimum_roi_pixels": 128,
+          "minimum_pairs_per_direction": 100,
+          "relative_sensitivity_review": 0.25
+        },
+        "slice_count": 5,
+        "texture_2mm": {
+          "contrast": 12.310939649458524,
+          "homogeneity": 0.39661663037625594,
+          "entropy": 7.839232313041899
+        },
+        "boundary_sensitivity_max": 0.09797976671340118,
+        "spacing_sensitivity_max": 0.14569895121015686,
+        "interpretation": "Checks measurement stability only. No flags does not establish healthy liver, absence of motion, correct segmentation, or diagnostic image quality."
+      }
+    },
+    {
+      "case_id": "chaos_22",
+      "image_fingerprint": "59da7190c2a065d74ec2d6f3e7ac38efee9dded798e2d36d1e2625b23a5a1e2e",
+      "mask_source": "CHAOS_expert_liver",
+      "spacing_xyz": [
+        2.03125,
+        2.03125,
+        9.000000042210802
+      ],
+      "quality": {
+        "method": "texture_qc_v1_2mm_linear_32bins_6mm_erosion",
+        "label": "exploratory_measurement_quality",
+        "status": "no_flags_detected",
+        "flags": [],
+        "policy": {
+          "minimum_roi_pixels": 128,
+          "minimum_pairs_per_direction": 100,
+          "relative_sensitivity_review": 0.25
+        },
+        "slice_count": 5,
+        "texture_2mm": {
+          "contrast": 8.867188798080976,
+          "homogeneity": 0.4214294154887721,
+          "entropy": 7.972927419427597
+        },
+        "boundary_sensitivity_max": 0.0647234917702032,
+        "spacing_sensitivity_max": 0.2127016915296327,
+        "interpretation": "Checks measurement stability only. No flags does not establish healthy liver, absence of motion, correct segmentation, or diagnostic image quality."
+      }
+    },
+    {
+      "case_id": "chaos_3",
+      "image_fingerprint": "061992771e177afdee0e1930321e43f1a3360abeeb0003ebb81f053bf084f36a",
+      "mask_source": "CHAOS_expert_liver",
+      "spacing_xyz": [
+        1.44097220897674,
+        1.44097220897674,
+        9.000000263082585
+      ],
+      "quality": {
+        "method": "texture_qc_v1_2mm_linear_32bins_6mm_erosion",
+        "label": "exploratory_measurement_quality",
+        "status": "no_flags_detected",
+        "flags": [],
+        "policy": {
+          "minimum_roi_pixels": 128,
+          "minimum_pairs_per_direction": 100,
+          "relative_sensitivity_review": 0.25
+        },
+        "slice_count": 5,
+        "texture_2mm": {
+          "contrast": 17.548138367693998,
+          "homogeneity": 0.2910250939534499,
+          "entropy": 8.195833275768498
+        },
+        "boundary_sensitivity_max": 0.11241307066141057,
+        "spacing_sensitivity_max": 0.17133819451697932,
+        "interpretation": "Checks measurement stability only. No flags does not establish healthy liver, absence of motion, correct segmentation, or diagnostic image quality."
+      }
+    },
+    {
+      "case_id": "chaos_31",
+      "image_fingerprint": "f873c20cb548c21334ecc92260950bfb605f8a27d27a4b2f001ec708eedc2996",
+      "mask_source": "CHAOS_expert_liver",
+      "spacing_xyz": [
+        1.69921875,
+        1.69921875,
+        8.999999943245632
+      ],
+      "quality": {
+        "method": "texture_qc_v1_2mm_linear_32bins_6mm_erosion",
+        "label": "exploratory_measurement_quality",
+        "status": "review_required",
+        "flags": [
+          "spacing_sensitive"
+        ],
+        "policy": {
+          "minimum_roi_pixels": 128,
+          "minimum_pairs_per_direction": 100,
+          "relative_sensitivity_review": 0.25
+        },
+        "slice_count": 5,
+        "texture_2mm": {
+          "contrast": 13.926876898916413,
+          "homogeneity": 0.33647416433796407,
+          "entropy": 7.940929023095796
+        },
+        "boundary_sensitivity_max": 0.1930952642333663,
+        "spacing_sensitivity_max": 0.2528179368761686,
+        "interpretation": "Checks measurement stability only. No flags does not establish healthy liver, absence of motion, correct segmentation, or diagnostic image quality."
+      }
+    },
+    {
+      "case_id": "chaos_32",
+      "image_fingerprint": "85af0bd633cfec8f6a467924bdcd2132cdfd7a9ced7377bffaff526e85dee6d8",
+      "mask_source": "CHAOS_expert_liver",
+      "spacing_xyz": [
+        1.81640625,
+        1.81640625,
+        9.0
+      ],
+      "quality": {
+        "method": "texture_qc_v1_2mm_linear_32bins_6mm_erosion",
+        "label": "exploratory_measurement_quality",
+        "status": "no_flags_detected",
+        "flags": [],
+        "policy": {
+          "minimum_roi_pixels": 128,
+          "minimum_pairs_per_direction": 100,
+          "relative_sensitivity_review": 0.25
+        },
+        "slice_count": 5,
+        "texture_2mm": {
+          "contrast": 7.558330650164248,
+          "homogeneity": 0.4799401537823564,
+          "entropy": 7.593765778485954
+        },
+        "boundary_sensitivity_max": 0.06993004532313783,
+        "spacing_sensitivity_max": 0.17091022919817614,
+        "interpretation": "Checks measurement stability only. No flags does not establish healthy liver, absence of motion, correct segmentation, or diagnostic image quality."
+      }
+    },
+    {
+      "case_id": "chaos_33",
+      "image_fingerprint": "c39ad941054627c39b5a0df88d4593ec73bee43ff2a57008b907a3b797959f3a",
+      "mask_source": "CHAOS_expert_liver",
+      "spacing_xyz": [
+        1.73828125,
+        1.73828125,
+        9.000000232551464
+      ],
+      "quality": {
+        "method": "texture_qc_v1_2mm_linear_32bins_6mm_erosion",
+        "label": "exploratory_measurement_quality",
+        "status": "review_required",
+        "flags": [
+          "boundary_sensitive",
+          "spacing_sensitive"
+        ],
+        "policy": {
+          "minimum_roi_pixels": 128,
+          "minimum_pairs_per_direction": 100,
+          "relative_sensitivity_review": 0.25
+        },
+        "slice_count": 5,
+        "texture_2mm": {
+          "contrast": 10.159188573078904,
+          "homogeneity": 0.38876141379320955,
+          "entropy": 7.717513953774278
+        },
+        "boundary_sensitivity_max": 0.41179182455317104,
+        "spacing_sensitivity_max": 0.2666546737491062,
+        "interpretation": "Checks measurement stability only. No flags does not establish healthy liver, absence of motion, correct segmentation, or diagnostic image quality."
+      }
+    },
+    {
+      "case_id": "chaos_34",
+      "image_fingerprint": "56eec38b4482c712bd4b63f9d4f6dccd7417c06e0f604aa23b7d94aa7d040e26",
+      "mask_source": "CHAOS_expert_liver",
+      "spacing_xyz": [
+        1.73828125,
+        1.73828125,
+        5.499999775605794
+      ],
+      "quality": {
+        "method": "texture_qc_v1_2mm_linear_32bins_6mm_erosion",
+        "label": "exploratory_measurement_quality",
+        "status": "no_flags_detected",
+        "flags": [],
+        "policy": {
+          "minimum_roi_pixels": 128,
+          "minimum_pairs_per_direction": 100,
+          "relative_sensitivity_review": 0.25
+        },
+        "slice_count": 5,
+        "texture_2mm": {
+          "contrast": 13.114915729136936,
+          "homogeneity": 0.38836690675748464,
+          "entropy": 7.880099226584717
+        },
+        "boundary_sensitivity_max": 0.08620005048366969,
+        "spacing_sensitivity_max": 0.22587733398679538,
+        "interpretation": "Checks measurement stability only. No flags does not establish healthy liver, absence of motion, correct segmentation, or diagnostic image quality."
+      }
+    },
+    {
+      "case_id": "chaos_36",
+      "image_fingerprint": "6e86b8d93abb3c944d432d00a3f3e86882609b5c8df7de0ecadf805448d7edb7",
+      "mask_source": "CHAOS_expert_liver",
+      "spacing_xyz": [
+        1.69921875,
+        1.69921875,
+        9.000000412399594
+      ],
+      "quality": {
+        "method": "texture_qc_v1_2mm_linear_32bins_6mm_erosion",
+        "label": "exploratory_measurement_quality",
+        "status": "no_flags_detected",
+        "flags": [],
+        "policy": {
+          "minimum_roi_pixels": 128,
+          "minimum_pairs_per_direction": 100,
+          "relative_sensitivity_review": 0.25
+        },
+        "slice_count": 5,
+        "texture_2mm": {
+          "contrast": 10.01367121834117,
+          "homogeneity": 0.35987249886320505,
+          "entropy": 7.912366716990043
+        },
+        "boundary_sensitivity_max": 0.24486766073044705,
+        "spacing_sensitivity_max": 0.20619793182406027,
+        "interpretation": "Checks measurement stability only. No flags does not establish healthy liver, absence of motion, correct segmentation, or diagnostic image quality."
+      }
+    },
+    {
+      "case_id": "chaos_37",
+      "image_fingerprint": "5c1b731d58f73aad95bc62a12a8bca91d3cc32c017ccae63e0928da5d5121048",
+      "mask_source": "CHAOS_expert_liver",
+      "spacing_xyz": [
+        1.46484375,
+        1.46484375,
+        9.0
+      ],
+      "quality": {
+        "method": "texture_qc_v1_2mm_linear_32bins_6mm_erosion",
+        "label": "exploratory_measurement_quality",
+        "status": "no_flags_detected",
+        "flags": [],
+        "policy": {
+          "minimum_roi_pixels": 128,
+          "minimum_pairs_per_direction": 100,
+          "relative_sensitivity_review": 0.25
+        },
+        "slice_count": 5,
+        "texture_2mm": {
+          "contrast": 12.628733666692955,
+          "homogeneity": 0.36482726245605945,
+          "entropy": 8.040565171229348
+        },
+        "boundary_sensitivity_max": 0.047312757069335215,
+        "spacing_sensitivity_max": 0.18539172520863367,
+        "interpretation": "Checks measurement stability only. No flags does not establish healthy liver, absence of motion, correct segmentation, or diagnostic image quality."
+      }
+    },
+    {
+      "case_id": "chaos_38",
+      "image_fingerprint": "abdc897493afb99d72058eb89b8bed93aaecbcd56c57c6a0d3d5bb8e41b3492b",
+      "mask_source": "CHAOS_expert_liver",
+      "spacing_xyz": [
+        1.44097220897674,
+        1.44097220897674,
+        8.999999768806061
+      ],
+      "quality": {
+        "method": "texture_qc_v1_2mm_linear_32bins_6mm_erosion",
+        "label": "exploratory_measurement_quality",
+        "status": "review_required",
+        "flags": [
+          "boundary_sensitive"
+        ],
+        "policy": {
+          "minimum_roi_pixels": 128,
+          "minimum_pairs_per_direction": 100,
+          "relative_sensitivity_review": 0.25
+        },
+        "slice_count": 5,
+        "texture_2mm": {
+          "contrast": 13.197751365875614,
+          "homogeneity": 0.3449726779589703,
+          "entropy": 8.017639378239528
+        },
+        "boundary_sensitivity_max": 0.4314418958762597,
+        "spacing_sensitivity_max": 0.19502933684784438,
+        "interpretation": "Checks measurement stability only. No flags does not establish healthy liver, absence of motion, correct segmentation, or diagnostic image quality."
+      }
+    },
+    {
+      "case_id": "chaos_39",
+      "image_fingerprint": "b62e0ea71634e10148701f7641892f0dd9d92c1cd66a82d1a6c9be4e4565e38e",
+      "mask_source": "CHAOS_expert_liver",
+      "spacing_xyz": [
+        1.69921875,
+        1.69921875,
+        9.000000145657731
+      ],
+      "quality": {
+        "method": "texture_qc_v1_2mm_linear_32bins_6mm_erosion",
+        "label": "exploratory_measurement_quality",
+        "status": "no_flags_detected",
+        "flags": [],
+        "policy": {
+          "minimum_roi_pixels": 128,
+          "minimum_pairs_per_direction": 100,
+          "relative_sensitivity_review": 0.25
+        },
+        "slice_count": 5,
+        "texture_2mm": {
+          "contrast": 13.63197735176617,
+          "homogeneity": 0.38981759812055117,
+          "entropy": 7.862789411950708
+        },
+        "boundary_sensitivity_max": 0.2137454722575421,
+        "spacing_sensitivity_max": 0.2017875122977641,
+        "interpretation": "Checks measurement stability only. No flags does not establish healthy liver, absence of motion, correct segmentation, or diagnostic image quality."
+      }
+    },
+    {
+      "case_id": "chaos_5",
+      "image_fingerprint": "2f63453c8bba7cb7b1b99f34afd01d541a262f3c1b800bed9bfc6d09fca7c3a2",
+      "mask_source": "CHAOS_expert_liver",
+      "spacing_xyz": [
+        1.69921875,
+        1.69921875,
+        8.999999999999655
+      ],
+      "quality": {
+        "method": "texture_qc_v1_2mm_linear_32bins_6mm_erosion",
+        "label": "exploratory_measurement_quality",
+        "status": "no_flags_detected",
+        "flags": [],
+        "policy": {
+          "minimum_roi_pixels": 128,
+          "minimum_pairs_per_direction": 100,
+          "relative_sensitivity_review": 0.25
+        },
+        "slice_count": 5,
+        "texture_2mm": {
+          "contrast": 12.05826917211817,
+          "homogeneity": 0.4250531757422267,
+          "entropy": 7.673095536050637
+        },
+        "boundary_sensitivity_max": 0.08140771285874224,
+        "spacing_sensitivity_max": 0.22200448770621287,
+        "interpretation": "Checks measurement stability only. No flags does not establish healthy liver, absence of motion, correct segmentation, or diagnostic image quality."
+      }
+    },
+    {
+      "case_id": "chaos_8",
+      "image_fingerprint": "3ed7da5b62b72c7eb093253d50d4d9939118278caf4b071ad2d9fe61e6f5cd23",
+      "mask_source": "CHAOS_expert_liver",
+      "spacing_xyz": [
+        1.44097220897674,
+        1.44097220897674,
+        5.999999891008514
+      ],
+      "quality": {
+        "method": "texture_qc_v1_2mm_linear_32bins_6mm_erosion",
+        "label": "exploratory_measurement_quality",
+        "status": "no_flags_detected",
+        "flags": [],
+        "policy": {
+          "minimum_roi_pixels": 128,
+          "minimum_pairs_per_direction": 100,
+          "relative_sensitivity_review": 0.25
+        },
+        "slice_count": 5,
+        "texture_2mm": {
+          "contrast": 15.744486420642852,
+          "homogeneity": 0.3071173804567924,
+          "entropy": 8.420743328748078
+        },
+        "boundary_sensitivity_max": 0.04512616610051839,
+        "spacing_sensitivity_max": 0.1805410246533555,
+        "interpretation": "Checks measurement stability only. No flags does not establish healthy liver, absence of motion, correct segmentation, or diagnostic image quality."
+      }
+    }
+  ],
+  "attribution": "Ali Emre Kavur, M. Alper Selver, Oguz Dicle, Mustafa Baris, N. Sinem Gezer (2019), CHAOS Challenge Data v1.03. Derived QC measurements; images and masks are not redistributed.",
+  "license": "CC BY-NC-SA 4.0",
+  "license_url": "https://creativecommons.org/licenses/by-nc-sa/4.0/"
+}

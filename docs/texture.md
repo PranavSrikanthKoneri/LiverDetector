@@ -51,3 +51,9 @@ fat measurements reproduced unchanged. These are example outputs, not thresholds
 
 Run repository checks with `python -m pytest tests -q`. The ignored debug folder
 contains independent research scripts/environments and is not part of this suite.
+
+## Measurement quality checks
+
+The pipeline additionally writes `texture_quality.json`. See
+[texture_quality.md](texture_quality.md) for the CHAOS reference, status meanings,
+limitations and instructions for existing saved masks.
