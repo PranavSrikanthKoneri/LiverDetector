@@ -104,3 +104,9 @@
   align-items: center;
   gap: var(--space-3);
 }
+
+.upload-dropzone { width: 100%; max-width: 580px; min-height: 260px; border: 1px dashed #9eafb8; background: #fff; display: flex; justify-content: center; align-items: center; }
+.upload-dropzone.has-file { min-height: 130px; }
+.upload-icon-ring { border: none; box-shadow: none; color: var(--accent); background: #edf3f6; border-radius: 50%; }
+.upload-file-details { min-width: 0; }
+.upload-file-name { overflow-wrap: anywhere; }

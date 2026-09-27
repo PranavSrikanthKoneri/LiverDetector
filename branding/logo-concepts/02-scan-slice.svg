@@ -1,0 +1,33 @@
+<svg width="512" height="512" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+  <title>FibroLens — Scan Slice</title>
+  <defs>
+    <clipPath id="liverClip2">
+      <path d="M21,36 C19,21 36,11 55,13 C74,15 87,23 89,38 C91,51 84,61 70,65 C67,70 59,74 52,70 C47,74 39,76 33,70 C22,64 14,55 15,45 C15,41 18,38 21,36 Z"/>
+    </clipPath>
+    <radialGradient id="scanGlow" cx="30%" cy="30%" r="80%">
+      <stop offset="0%" stop-color="#e2eaed" stop-opacity="0.14"/>
+      <stop offset="100%" stop-color="#e2eaed" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+
+  <!-- dark scan frame, same ink as the in-app MRI viewer -->
+  <rect x="0" y="0" width="100" height="100" rx="14" fill="#111719"/>
+  <rect x="0" y="0" width="100" height="100" rx="14" fill="url(#scanGlow)"/>
+
+  <!-- faint concentric scan sweep, one corner only, minimal -->
+  <g stroke="#5ab4dd" stroke-width="0.7" fill="none" opacity="0.3">
+    <circle cx="14" cy="14" r="8"/>
+    <circle cx="14" cy="14" r="14"/>
+    <circle cx="14" cy="14" r="20"/>
+  </g>
+
+  <!-- MRI grain fill -->
+  <rect x="10" y="8" width="82" height="72" fill="#e2eaed" opacity="0.05" clip-path="url(#liverClip2)"/>
+
+  <!-- liver contour, warm yellow like the app's selected-mask outline -->
+  <path d="M21,36 C19,21 36,11 55,13 C74,15 87,23 89,38 C91,51 84,61 70,65 C67,70 59,74 52,70 C47,74 39,76 33,70 C22,64 14,55 15,45 C15,41 18,38 21,36 Z"
+        fill="none" stroke="#e8c15a" stroke-width="2.4" stroke-linejoin="round"/>
+
+  <!-- slice index tick, echoes "Slice index 17" caption in the app -->
+  <text x="10" y="93" font-family="-apple-system,Segoe UI,sans-serif" font-size="6" fill="#aebdc1" letter-spacing="1">SLICE 01</text>
+</svg>

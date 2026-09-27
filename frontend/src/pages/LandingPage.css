@@ -1,0 +1,147 @@
+.landing-page { --story-progress: 0; --hero-progress: 0; overflow: clip; }
+.landing-hero { position: relative; display: grid; grid-template-columns: 1.15fr 1fr; gap: 36px; align-items: center; min-height: min(800px, calc(100svh - 76px)); padding-top: 56px; padding-bottom: 96px; }
+.hero-copy { position: relative; z-index: 1; }
+.hero-copy .eyebrow { display: flex; align-items: center; gap: 12px; }
+.hero-copy h1 { margin: 24px 0; font-size: clamp(3.5rem, 5.8vw, 6rem); line-height: 1.01; font-weight: 500; letter-spacing: -0.075em; }
+.hero-copy h1 > span { color: #5b747f; }
+.hero-description { max-width: 360px; font-size: 1.125rem; color: var(--text-secondary); line-height: 1.65; }
+.hero-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 24px; margin-top: 30px; }
+.hero-actions .btn { padding: 14px 24px; }
+.quiet-link { display: inline-flex; align-items: center; gap: 8px; color: var(--text-primary); font-size: 0.875rem; text-decoration: none; }
+.quiet-link:hover { color: var(--accent); }
+.hero-note { display: inline-flex; align-items: center; gap: 8px; margin-top: 28px; padding: 8px 14px 8px 11px; border: 1px solid #ecd3aa; border-radius: 999px; background: #fbf1df; color: #7a4d12; font-size: 0.8125rem; line-height: 1.35; }
+.hero-note svg { flex: none; color: #986018; }
+.hero-note strong { font-weight: 600; }
+.hero-object { width: 100%; max-width: 500px; justify-self: end; transform: translateY(calc(var(--hero-progress) * -24px)); }
+.hero-bottom { position: absolute; bottom: 30px; left: 24px; right: 24px; display: flex; justify-content: flex-end; border-top: 1px solid var(--border); padding-top: 18px; color: var(--text-secondary); font-size: 0.6875rem; letter-spacing: 0.06em; text-transform: uppercase; }
+.hero-bottom > span:last-child { display: flex; align-items: center; gap: 10px; }
+.scan-illustration { position: relative; width: 100%; border-radius: 18px; background: #ecf0eb; padding: 24px; border: 1px solid #dce4dd; }
+.scan-figure-top { display: flex; justify-content: space-between; gap: 12px; font-size: 0.625rem; text-transform: uppercase; letter-spacing: 0.12em; color: #526b71; }
+.scan-art { position: relative; aspect-ratio: 1; display: flex; align-items: center; justify-content: center; }
+.scan-art svg { width: 100%; height: auto; }
+.illustration-liver { transition: fill-opacity 600ms ease, stroke-opacity 600ms ease; }
+.scan-figure-bottom { display: flex; align-items: center; gap: 8px; font-size: 0.8125rem; color: #264654; }
+.scan-dot { display: block; width: 5px; height: 5px; border-radius: 50%; background: #225e91; }
+.scan-source { margin-top: 8px; font-size: 0.625rem; color: #596d72; }
+.scan-real { background: #111719; border-color: #243036; }
+.scan-real .scan-figure-top, .scan-real .scan-source { color: #aebdc1; }
+.scan-real .scan-figure-bottom { color: #e2eaed; }
+.scan-real .scan-dot { background: #68b4e0; }
+.sample-scan { display: block; width: 100%; image-rendering: auto; }
+.sample-outline { position: absolute; inset: 0; width: 100%; height: 100%; transition: opacity 600ms ease; }
+.landing-intro { padding-top: 80px; padding-bottom: 64px; scroll-margin-top: 100px; }
+.landing-intro h2 { margin: 24px 0; font-size: clamp(2rem, 4.3vw, 4rem); line-height: 1.13; font-weight: 500; letter-spacing: -0.055em; }
+.landing-intro h2 span { color: #64777c; }
+.landing-intro > p:last-child { color: var(--text-secondary); max-width: 570px; font-size: 1.0625rem; }
+.scroll-story { display: grid; grid-template-columns: 1fr 0.9fr; gap: clamp(32px, 9vw, 130px); align-items: start; }
+.story-sticky { position: sticky; top: 120px; padding-bottom: 40px; }
+.story-visual { transform-origin: center; }
+.story-chapter { min-height: 58vh; display: flex; flex-direction: column; justify-content: center; padding: 48px 0; scroll-margin-top: 100px; }
+.story-chapter h2 { margin: 24px 0; font-size: clamp(2rem, 3.6vw, 3.5rem); font-weight: 500; letter-spacing: -0.05em; }
+.story-chapter > p:not(.eyebrow) { color: var(--text-secondary); font-size: 1.0625rem; line-height: 1.75; }
+.chapter-note { display: block; margin-top: 24px; border-left: 2px solid #a4becd; padding-left: 14px; color: var(--text-secondary); font-size: 0.75rem; }
+.story-controls { display: flex; justify-content: center; gap: 4px; padding-top: 20px; }
+.story-controls button { font: inherit; font-size: 0.75rem; border: 0; border-radius: 30px; color: var(--text-secondary); background: transparent; padding: 9px 14px; cursor: pointer; }
+.story-controls button span { font-size: 0.625rem; margin-right: 5px; }
+.story-controls button[aria-pressed="true"] { background: #e3ebed; color: #225e91; }
+.story-controls button:hover { background: #e8edeb; }
+.landing-workflow { display: grid; grid-template-columns: 1fr 1fr; gap: 64px; border-top: 1px solid var(--border); padding-top: 100px; padding-bottom: 110px; margin-top: 80px; }
+.workflow-heading h2 { font-size: clamp(2rem, 3.5vw, 3.25rem); line-height: 1.14; margin-top: 24px; letter-spacing: -0.05em; }
+.workflow-list { list-style: none; }
+.workflow-list li { display: flex; gap: 24px; padding: 28px 0; border-bottom: 1px solid var(--border); }
+.workflow-list li:first-child { padding-top: 0; }
+.workflow-list li > span { color: var(--accent); font-size: 0.6875rem; padding-top: 5px; }
+.workflow-list h3 { font-size: 1.125rem; margin-bottom: 8px; }
+.workflow-list p { font-size: 0.875rem; color: var(--text-secondary); max-width: 360px; }
+.landing-closing { text-align: center; padding-top: 80px; padding-bottom: 100px; border-top: 1px solid var(--border); }
+.landing-closing h2 { margin: 24px 0 32px; font-size: clamp(2.5rem, 5vw, 4.25rem); letter-spacing: -0.065em; }
+.landing-closing > p:last-child { font-size: 0.8125rem; margin-top: 24px; color: var(--text-secondary); }
+.landing-footer { display: flex; align-items: center; justify-content: space-between; gap: 24px; padding-top: 24px; padding-bottom: 32px; border-top: 1px solid var(--border); font-size: 0.6875rem; color: var(--text-secondary); }
+.landing-footer > span:first-child { font-size: 1rem; color: var(--text-primary); font-weight: 600; letter-spacing: -0.04em; }
+.landing-footer a { color: inherit; text-decoration: none; }
+/* Typography-first is a distinct composition, with the visual introduced below. */
+.visual-type .landing-hero { display: flex; justify-content: center; text-align: center; min-height: min(880px, calc(100svh - 76px)); }
+.visual-type .hero-copy { max-width: 1080px; }
+.visual-type .hero-copy .eyebrow, .visual-type .hero-actions { justify-content: center; }
+.visual-type .hero-copy h1 { font-size: clamp(3.8rem, 8vw, 8rem); }
+.visual-type .hero-description { margin-inline: auto; }
+.visual-type .story-visual { max-width: 360px; margin: 40px auto 0; }
+/* Cinematic: longer chapters, perspective, and a larger evolving focal image.
+   Scrolling remains native; no wheel interception or scroll locking. */
+.motion-cinematic .hero-object { transform: perspective(1100px) translateY(calc(var(--hero-progress) * 65px)) rotateY(calc(var(--hero-progress) * -12deg)) scale(calc(1 + var(--hero-progress) * 0.10)); }
+.motion-cinematic .hero-copy { transform: translateY(calc(var(--hero-progress) * -35px)); }
+.motion-cinematic .story-chapter { min-height: 85vh; }
+.motion-cinematic .story-visual { transform: perspective(1200px) rotateY(calc((var(--story-progress) - 0.5) * 9deg)) scale(calc(0.96 + var(--story-progress) * 0.08)); }
+.motion-cinematic .story-chapter h2 { transition: transform 600ms ease; }
+.motion-cinematic .story-chapter.is-current h2 { transform: translateX(8px); }
+.motion-cinematic.visual-type .hero-copy { transform: translateY(calc(var(--hero-progress) * -50px)) scale(calc(1 - var(--hero-progress) * 0.06)); }
+@media (max-width: 760px) {
+  .landing-hero { grid-template-columns: 1fr; gap: 40px; min-height: auto; padding-top: 56px; padding-bottom: 92px; }
+  .hero-copy h1 { font-size: clamp(3.25rem, 10vw, 5.5rem); }
+  .hero-object { max-width: 480px; justify-self: center; }
+  .hero-actions { gap: 20px; }
+  .hero-bottom { font-size: 0.5625rem; }
+  .landing-intro { padding-top: 72px; padding-bottom: 48px; }
+  .hero-note { font-size: 0.75rem; }
+  .scroll-story { grid-template-columns: 1fr; gap: 0; }
+  .story-sticky { top: 72px; padding: 8px 0 16px; background: var(--bg-primary); z-index: 2; }
+  .story-visual, .visual-type .story-visual { width: min(100%, 270px); margin: 0 auto; }
+  .story-sticky .scan-illustration { padding: 14px; }
+  .story-sticky .scan-art { aspect-ratio: 1.45; overflow: hidden; }
+  .story-sticky .scan-art svg { max-height: 175px; }
+  .story-sticky .sample-scan, .story-sticky .sample-outline { width: 100%; height: 100%; object-fit: contain; }
+  .story-sticky .scan-figure-top { font-size: 0.5rem; }
+  .story-sticky .scan-source { font-size: 0.5625rem; }
+  .story-controls { padding-top: 10px; }
+  .story-chapter, .motion-cinematic .story-chapter { min-height: 60vh; padding: 40px 0; scroll-margin-top: 380px; }
+  .landing-workflow { grid-template-columns: 1fr; gap: 48px; padding-block: 64px; margin-top: 40px; }
+  .landing-closing { padding-block: 64px; }
+  .visual-type .landing-hero { min-height: 80svh; }
+  .visual-type .hero-copy h1 { font-size: clamp(3.25rem, 10vw, 5.5rem); }
+  .landing-footer { gap: 12px; flex-wrap: wrap; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .landing-page .hero-object, .landing-page .hero-copy, .landing-page .story-visual, .landing-page .story-chapter h2 { transform: none !important; }
+  .landing-page .story-chapter { min-height: auto; }
+  .story-sticky { position: static; }
+  .scroll-story { align-items: start; }
+}
+.scroll-reveal { opacity: 0; transform: translateY(18px); transition: opacity 650ms ease, transform 650ms ease; }
+.scroll-reveal.is-revealed { opacity: 1; transform: translateY(0); }
+.motion-cinematic .scroll-reveal { transform: translateY(48px); transition-duration: 900ms; }
+.motion-cinematic .scroll-reveal.is-revealed { transform: translateY(0); }
+.motion-cinematic .story-visual { transform: perspective(1200px) rotateY(calc((var(--story-progress) - 0.5) * 22deg)) scale(calc(0.9 + var(--story-progress) * 0.2)); }
+@media (prefers-reduced-motion: reduce) {
+  .landing-page .scroll-reveal { opacity: 1; transform: none; }
+  .landing-page .story-visual { transform: none; }
+}
+
+/* Distinct stages of the same example, without invented patient measurements. */
+.scan-image-stage { position: relative; width: 100%; aspect-ratio: 1; background: #000; overflow: hidden; }
+.scan-image-stage .sample-scan { height: 100%; object-fit: contain; mask-size: 100% 100%; mask-repeat: no-repeat; }
+.scan-isolated .sample-scan, .scan-isolated .sample-outline { transform: scale(1.35) translate(10%, 1%); }
+.scan-real .scan-art { margin: 14px 0; overflow: hidden; border-radius: 4px; }
+.scan-context { width: 100%; height: 100%; display: flex; flex-direction: column; justify-content: center; padding: clamp(14px, 3vw, 28px); background: #192326; color: #e2eaed; }
+.context-heading { display: flex; align-items: center; gap: 16px; margin-bottom: 18px; }
+.context-heading img { width: 70px; height: 70px; object-fit: contain; border-radius: 8px; }
+.context-heading span { display: block; font-size: 10px; text-transform: uppercase; letter-spacing: .1em; color: #9eb8c4; margin-bottom: 6px; }
+.context-heading strong { font-size: clamp(16px, 2vw, 22px); font-weight: 500; }
+.context-row { display: flex; align-items: center; gap: 16px; padding: 16px 0; border-top: 1px solid #35464b; }
+.context-row > span { color: #83b9d5; font-size: 11px; }
+.context-row strong { display: block; font-size: 14px; font-weight: 500; }
+.context-row small { display: block; color: #b4c5cb; font-size: 11px; margin-top: 4px; }
+.context-note { margin-top: 14px; font-size: 11px; color: #aebdc1; }
+@media(max-width:760px) {
+  .story-sticky .scan-art { aspect-ratio: 1; }
+  .story-sticky .scan-figure-top { font-size: 9px; }
+  .story-sticky .scan-figure-bottom { font-size: 11px; }
+  .story-chapter { scroll-margin-top: 420px; }
+  .scan-context { padding: 12px; }
+  .context-heading { gap: 10px; margin-bottom: 8px; }
+  .context-heading img { width: 38px; height: 38px; }
+  .context-heading strong { font-size: 14px; }
+  .context-row { padding: 9px 0; gap: 10px; }
+  .context-row strong { font-size: 12px; }
+  .context-row small, .context-note { font-size: 9px; }
+  .context-note { margin-top: 8px; }
+}

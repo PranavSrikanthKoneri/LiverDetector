@@ -13,3 +13,4 @@
   backdrop-filter: none;
   -webkit-backdrop-filter: none;
 }
+.site-disclaimer.disclaimer-banner-persistent { position: static; }

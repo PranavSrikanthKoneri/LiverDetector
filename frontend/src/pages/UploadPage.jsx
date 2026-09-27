@@ -38,7 +38,8 @@ export default function UploadPage({ onNext }) {
     <div className="page">
       <div className="container stack stack-xl">
         <div className="upload-hero">
-          <h2>Upload MRI Data</h2>
+          <p className="eyebrow">01 / The scan</p>
+          <h2>Start with your scan.</h2>
           <p className="text-secondary">
             Upload DICOM .zip archive (in-phase and opposed-phase).
           </p>
@@ -53,6 +54,10 @@ export default function UploadPage({ onNext }) {
           onDragOver={handleDrag}
           onDrop={handleDrop}
           onClick={() => !file && inputRef.current?.click()}
+          onKeyDown={e => { if (!file && e.target === e.currentTarget && (e.key === "Enter" || e.key === " ")) { e.preventDefault(); inputRef.current?.click(); } }}
+          role={file ? undefined : "button"}
+          tabIndex={file ? undefined : 0}
+          aria-label={file ? undefined : "Choose a DICOM ZIP archive"}
           id="mri-upload-dropzone"
         >
           <input
@@ -116,6 +121,7 @@ export default function UploadPage({ onNext }) {
             Select a ZIP containing in-phase and opposed-phase DICOM images.
           </p>
         </div>
+        <p className="workflow-footnote">Research and education only. Measurements and questionnaire estimates support discussion; they do not establish a diagnosis.</p>
       </div>
     </div>
   );

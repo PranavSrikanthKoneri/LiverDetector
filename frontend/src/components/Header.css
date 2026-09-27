@@ -82,3 +82,19 @@
   .header-steps { gap: var(--space-4); }
   .header-step-label { display: none; }
 }
+
+.app-header { padding: 18px 0; background: rgba(247, 247, 242, 0.94); backdrop-filter: blur(14px); }
+.header-brand { padding: 0; border: 0; background: transparent; color: var(--text-primary); cursor: pointer; font: inherit; }
+.header-title { font-size: 1.25rem; letter-spacing: -0.055em; }
+.brand-period { color: var(--accent); }
+.brand-mark { width: 26px; height: 26px; border: 1.5px solid var(--accent); border-radius: 50%; display: grid; place-items: center; }
+.brand-mark span { width: 14px; height: 14px; border: 1.5px solid var(--accent); border-radius: 50% 50% 4px 50%; transform: rotate(-35deg); }
+.landing-nav { display: flex; align-items: center; gap: 12px; }
+.landing-nav .nav-approach { display: inline-flex; align-items: center; gap: 6px; padding: 7px 14px; border: 1px solid rgba(34, 94, 145, 0.28); border-radius: var(--radius-md); background: rgba(34, 94, 145, 0.06); color: var(--accent); font-size: 0.8125rem; font-weight: 500; text-decoration: none; transition: background 160ms ease, border-color 160ms ease; }
+.landing-nav .nav-approach:hover { background: rgba(34, 94, 145, 0.12); border-color: var(--accent); }
+.landing-nav .nav-approach, .landing-nav .btn-sm { height: 34px; padding-block: 0; box-sizing: border-box; }
+@media (max-width: 640px) {
+  .app-header { padding: 14px 0; }
+  .landing-nav { gap: 12px; }
+  .landing-nav > a { display: none; }
+}

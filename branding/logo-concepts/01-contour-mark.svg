@@ -1,0 +1,26 @@
+<svg width="512" height="512" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+  <title>FibroLens — Contour Mark</title>
+  <defs>
+    <clipPath id="liverClip">
+      <path d="M21,36 C19,21 36,11 55,13 C74,15 87,23 89,38 C91,51 84,61 70,65 C67,70 59,74 52,70 C47,74 39,76 33,70 C22,64 14,55 15,45 C15,41 18,38 21,36 Z"/>
+    </clipPath>
+    <pattern id="hatch" width="3.2" height="3.2" patternTransform="rotate(28)" patternUnits="userSpaceOnUse">
+      <line x1="0" y1="0" x2="0" y2="3.2" stroke="#225e91" stroke-width="0.55"/>
+    </pattern>
+  </defs>
+
+  <!-- lens ring, echoes the header brand mark -->
+  <circle cx="50" cy="49" r="46" fill="none" stroke="#225e91" stroke-width="1.4" opacity="0.35"/>
+
+  <!-- liver contour, textured like the app's own MRI grain -->
+  <rect x="10" y="8" width="82" height="72" fill="url(#hatch)" opacity="0.55" clip-path="url(#liverClip)"/>
+  <path d="M21,36 C19,21 36,11 55,13 C74,15 87,23 89,38 C91,51 84,61 70,65 C67,70 59,74 52,70 C47,74 39,76 33,70 C22,64 14,55 15,45 C15,41 18,38 21,36 Z"
+        fill="none" stroke="#182a32" stroke-width="2.4" stroke-linejoin="round"/>
+
+  <!-- selected-mask accent, same teal used for the in-app outline -->
+  <path d="M52,70 C47,74 39,76 33,70 C31,68.5 29,66.8 27.3,64.9"
+        fill="none" stroke="#5ab4dd" stroke-width="2.6" stroke-linecap="round"/>
+
+  <!-- brand period, matches the wordmark's accent dot -->
+  <circle cx="83" cy="18" r="2.6" fill="#225e91"/>
+</svg>

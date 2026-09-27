@@ -1,0 +1,23 @@
+<svg width="512" height="512" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+  <title>FibroLens — Fibrosis Bands</title>
+  <defs>
+    <clipPath id="liverClip3">
+      <path d="M21,36 C19,21 36,11 55,13 C74,15 87,23 89,38 C91,51 84,61 70,65 C67,70 59,74 52,70 C47,74 39,76 33,70 C22,64 14,55 15,45 C15,41 18,38 21,36 Z"/>
+    </clipPath>
+  </defs>
+
+  <!-- concentric fibrosis-stage bands (F0→F4 palette), read outward like a stage progression -->
+  <g clip-path="url(#liverClip3)">
+    <rect x="10" y="8" width="82" height="72" fill="#28704c" opacity="0.16"/>
+    <circle cx="52" cy="40" r="34" fill="#986018" opacity="0.16"/>
+    <circle cx="52" cy="40" r="24" fill="#b63632" opacity="0.16"/>
+    <circle cx="52" cy="40" r="14" fill="#af52de" opacity="0.16"/>
+  </g>
+
+  <!-- liver contour -->
+  <path d="M21,36 C19,21 36,11 55,13 C74,15 87,23 89,38 C91,51 84,61 70,65 C67,70 59,74 52,70 C47,74 39,76 33,70 C22,64 14,55 15,45 C15,41 18,38 21,36 Z"
+        fill="none" stroke="#182a32" stroke-width="2.4" stroke-linejoin="round"/>
+
+  <!-- single stage tick, reads as a lens/target rather than a chart -->
+  <circle cx="52" cy="40" r="2" fill="#182a32"/>
+</svg>

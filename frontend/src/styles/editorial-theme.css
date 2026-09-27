@@ -1,0 +1,125 @@
+/* Editorial theme: carries the landing page's look into upload, questionnaire,
+   loading, and results. Loaded last from main.jsx; remove that one import to revert. */
+
+/* ── Shared ─────────────────────────────────────────── */
+.dashboard-page .mono,
+.progression-chart .mono {
+  font-family: var(--font-sans);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.02em;
+}
+
+/* Research notice: same amber treatment as the landing hero note. */
+.site-disclaimer.disclaimer-banner,
+.site-disclaimer.disclaimer-banner-persistent {
+  justify-content: center;
+  align-items: center;
+  padding: 10px 24px;
+  background: #fbf1df;
+  color: #7a4d12;
+  border: 0;
+  border-bottom: 1px solid #ecd3aa;
+  font-size: 0.8125rem;
+  line-height: 1.45;
+}
+.site-disclaimer.disclaimer-banner strong { color: #6a410c; font-weight: 600; }
+.site-disclaimer.disclaimer-banner svg { color: #986018; margin-top: 0; }
+.patient-content .site-disclaimer.disclaimer-banner { border: 1px solid #ecd3aa; border-radius: 14px; justify-content: flex-start; }
+
+/* ── Upload & questionnaire ─────────────────────────── */
+.upload-hero h2,
+.questionnaire-hero h2 { font-size: clamp(2.5rem, 5vw, 4rem); letter-spacing: -0.06em; line-height: 1.05; margin: 20px 0 16px; }
+.upload-dropzone { border-radius: 18px; border-color: #b9c7cd; background: #fbfbf8; }
+.upload-dropzone.drag-active { background: #eef3f5; border-color: var(--accent); }
+.questionnaire-form { border-radius: 18px; box-shadow: none; }
+.workflow-footnote { font-size: 0.75rem; }
+
+/* ── Loading ────────────────────────────────────────── */
+.loading-screen { background: rgba(247, 247, 242, 0.94); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); color: var(--text-primary); }
+.loading-spinner { color: var(--accent); }
+
+/* ── Results: frame ─────────────────────────────────── */
+.dashboard-topbar { border-bottom: 0; padding-bottom: 0; margin-bottom: 0; }
+.dashboard-tab-switcher { background: transparent; border: 0; padding: 0; gap: 4px; }
+.dashboard-tab { border-radius: 30px; padding: 8px 14px; font-size: 0.75rem; color: var(--text-secondary); }
+.dashboard-tab:hover { background: #e8edeb; }
+.dashboard-tab.active { background: #e3ebed; color: var(--accent); box-shadow: none; }
+
+.dashboard-case { padding: 16px 0 40px; border-bottom: 1px solid var(--border); gap: 12px; }
+.dashboard-case strong { font-size: clamp(2.25rem, 4.2vw, 3.5rem); line-height: 1.08; letter-spacing: -0.055em; }
+.dashboard-case span { font-size: 0.6875rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-tertiary); }
+
+.dashboard-content { gap: clamp(32px, 6vw, 80px); padding-top: 16px; }
+.dashboard-main { gap: 0; }
+.dashboard-main > * { padding-block: 40px; border-top: 1px solid var(--border); }
+.dashboard-main > *:first-child { border-top: 0; padding-top: 24px; }
+.dashboard-main > .alcohol-warning { padding-block: 0 32px; border-top: 0; }
+.dashboard-main > .triage-panel { border-top: 1px solid var(--border); padding-block: 40px; }
+.dashboard-main > .biomarker-panel { padding-bottom: 8px; }
+
+/* Section headings in the landing's large, tight type, without icons. */
+.dashboard-page .dashboard-main h3 { font-size: clamp(1.5rem, 2.4vw, 2rem); font-weight: 500; letter-spacing: -0.045em; line-height: 1.15; }
+.fibrosis-header svg,
+.dashboard-section-header > svg { display: none; }
+.dashboard-section-header { margin-bottom: 8px; }
+.dashboard-section-header p { margin-top: 6px; font-size: 0.6875rem !important; letter-spacing: 0.12em; text-transform: uppercase; }
+.patient-view-header { margin-bottom: 0; }
+.patient-view-header h3 { font-size: clamp(2rem, 3.6vw, 3rem) !important; }
+
+/* ── Results: questionnaire estimate ────────────────── */
+.fibrosis-panel { padding-inline: 0; gap: 24px; }
+.fibrosis-stage-display { justify-content: flex-start; }
+.fibrosis-stage-badge { align-items: flex-start; text-align: left; width: auto; min-height: 0; padding: 0; border: 0; border-radius: 0; background: transparent; }
+.fibrosis-stage-value { font-size: clamp(4rem, 7vw, 5.75rem); font-weight: 500; letter-spacing: -0.07em; }
+.fibrosis-stage-level { margin-top: 12px; font-size: 0.6875rem; font-weight: 600; letter-spacing: 0.14em; color: var(--text-primary); }
+.fibrosis-stage-note { margin-top: 14px; border-left: 2px solid #a4becd; padding-left: 12px; }
+.fibrosis-probs { gap: 8px; max-width: 520px; }
+.fibrosis-probs > span:first-child { font-size: 0.6875rem !important; letter-spacing: 0.12em; text-transform: uppercase; }
+.fibrosis-prob-label { text-align: left; width: 44px; }
+.fibrosis-prob-value { width: 40px; }
+
+/* ── Results: summary & alcohol ─────────────────────── */
+.triage-panel { padding-inline: 0; gap: 16px; }
+.triage-panel > p:first-of-type { font-size: 1.125rem; line-height: 1.6; color: var(--text-primary); }
+.triage-panel ul { display: flex; flex-direction: column; gap: 10px; padding-left: 18px; color: var(--text-secondary); line-height: 1.65; }
+.triage-panel li::marker { color: var(--accent); }
+.triage-panel > p.text-tertiary { border-left: 2px solid #a4becd; padding-left: 12px; font-size: 0.8125rem; }
+.alcohol-warning { border-left: 2px solid currentColor; padding-left: 14px; }
+
+/* ── Results: biomarkers as a numbered list ─────────── */
+.biomarker-list { counter-reset: biomarker; background: transparent; border: 0; border-top: 1px solid var(--border); border-radius: 0; box-shadow: none; margin-top: 12px; }
+.biomarker-list-item { gap: 20px; padding: 24px 0; }
+.biomarker-list-item::before { counter-increment: biomarker; content: "0" counter(biomarker); flex: none; width: 20px; padding-top: 16px; font-size: 0.6875rem; color: var(--accent); }
+.biomarker-item-icon { display: none; }
+.biomarker-item-label { font-size: 1.0625rem; }
+.biomarker-item-value { font-size: clamp(1.75rem, 3vw, 2.5rem); font-weight: 500; letter-spacing: -0.05em; }
+.biomarker-item-sub { max-width: 440px; margin-top: 4px; }
+
+/* ── Results: progression ───────────────────────────── */
+.progression-chart { padding-inline: 0; }
+.progression-chart input[type="range"] { accent-color: var(--accent); }
+.progression-year-display { border-radius: 30px; background: #e3ebed; border: 0; color: var(--accent); }
+
+/* ── Results: scan card, matching the landing's dark MRI figure ── */
+.dashboard-sidebar { padding: 0; background: transparent; border: 0; border-radius: 0; top: 104px; }
+.mri-viewer { padding: 24px; background: #111719; border: 1px solid #243036; border-radius: 18px; color: #e2eaed; }
+.mri-viewer h3 { color: #f1f5f6; font-size: 1.25rem !important; font-weight: 500; letter-spacing: -0.03em; }
+.mri-case-heading p { font-size: 0.625rem; letter-spacing: 0.12em; text-transform: uppercase; color: #aebdc1; }
+.mri-control { color: #e2eaed; font-size: 0.8125rem; }
+.mri-control input[type="checkbox"] { accent-color: #68b4e0; }
+.mri-viewer .text-tertiary { color: #aebdc1; font-size: 0.8125rem; line-height: 1.6; }
+.mri-projection-caption { color: #e2eaed; }
+.mri-scan-frame { border-radius: 4px; overflow: hidden; }
+.mri-nav span { color: #e2eaed; font-size: 0.8125rem; }
+.mri-viewer .btn-secondary { background: rgba(255, 255, 255, 0.08); border: 1px solid rgba(255, 255, 255, 0.14); color: #e2eaed; }
+.mri-viewer .btn-secondary:hover:not(:disabled) { background: rgba(255, 255, 255, 0.16); }
+.mri-viewer .btn-secondary:disabled { color: rgba(226, 234, 237, 0.4); background: transparent; }
+.dashboard-main > .dashboard-progression-section:has(.mri-viewer) { border-top: 0; }
+
+@media (max-width: 960px) {
+  .dashboard-sidebar { position: static; }
+}
+@media (max-width: 480px) {
+  .mri-viewer { padding: 16px; }
+  .site-disclaimer.disclaimer-banner { justify-content: flex-start; padding: 10px 16px; }
+}

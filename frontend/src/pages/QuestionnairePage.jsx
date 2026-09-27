@@ -59,9 +59,10 @@ export default function QuestionnairePage({ onBack, onSubmit }) {
     <div className="page">
       <div className="container stack stack-xl">
         <div className="questionnaire-hero">
-          <h2>Clinical Questionnaire</h2>
+          <p className="eyebrow">02 / The context</p>
+          <h2>A little more context.</h2>
           <p className="text-secondary">
-            Enter patient clinical parameters.
+            These answers inform the questionnaire risk estimate. MRI measurements are reported separately.
           </p>
         </div>
 

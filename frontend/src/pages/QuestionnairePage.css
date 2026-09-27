@@ -37,3 +37,7 @@
   justify-content: space-between;
   align-items: center;
 }
+
+.questionnaire-form { width: 100%; max-width: 700px; padding: clamp(24px, 5vw, 48px); }
+.questionnaire-grid { gap: 28px 24px; }
+.questionnaire-actions { padding-top: 24px; border-top: 1px solid var(--border); }

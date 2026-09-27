@@ -1,100 +1,134 @@
 # FibroLens
 
-Research demo combining dual-echo MRI measurements with a separate questionnaire
-fibrosis-risk model. **Not diagnostic.** Texture is exploratory; the two-echo fat
-estimate is not calibrated PDFF. Clipping and texture stability flags are retained.
+MRI-based liver fibrosis research demo.
 
-## Project layout
+## Description
 
-```text
-frontend/                 React/Vite dashboard and HTTP client
-backend/
-  app/                    FastAPI: /api/health and /api/analyze
-  demo/                   Shared pipeline, CLI, example questionnaire, handoff
-  imaging/                DICOM loader, MedSAM, fallback, fat, texture and QC
-    resources/            Versioned numerical texture reference (with attribution)
-  tabular/                Questionnaire model, saved artifact and projections
-  tests/                  Python unit and integration tests
-  scripts/                Dataset/cohort preparation utilities
-docs/                     Contracts, research notes and branch audit
-pyproject.toml            Installable backend and pytest configuration
-requirements.txt          Redirects to backend/requirements.txt
-debug/                    Local generated results (ignored)
-```
+FibroLens combines two independent signals into one report: a dual-echo MRI
+measurement (liver segmentation, fat percentage, texture) computed from an
+uploaded DICOM scan, and a separate fibrosis-risk estimate from a short
+clinical questionnaire (age, BMI, waist circumference, diabetes status,
+alcohol intake). The two are shown side by side rather than merged into a
+single score, so each stays traceable to its own source.
 
-The earlier local `models/` prototype, environments, downloaded data, and saved
-result ZIPs are preserved and ignored. The active model is
-`backend/tabular/risk_model.joblib`; no training is needed to run the demo.
+**This is a research and education tool, not a diagnostic one.** The texture
+measurement is exploratory, the two-echo fat estimate is not a calibrated
+PDFF, and the questionnaire model is trained on proxy labels. It does not
+replace a FibroScan, biopsy, or a clinician's evaluation.
 
-## Setup on the existing Windows GPU machine
+## Getting Started
 
-Run from the repository root. Reuse the environment that already ran MedSAM:
+### Dependencies
+
+- Windows, macOS, or Linux with Python 3.10+ and Node.js 18+
+- A CUDA GPU is optional (falls back to CPU) but strongly recommended for
+  the segmentation step — MedSAM and TotalSegmentator are slow on CPU
+- The [MedSAM](https://github.com/bowang-lab/MedSAM) repository, cloned
+  alongside this one, plus its official checkpoint weights
+- No API key and no external service calls are required — inference runs
+  entirely locally
+
+### Installing
 
 ```powershell
-.\.venv-medsam\Scripts\Activate.ps1
-uv pip install --python .\.venv-medsam\Scripts\python.exe -e . "torch==2.6.0+cu124" "torchvision==0.21.0+cu124"
-$env:PYTHONPATH = (Resolve-Path ..\MedSAM).Path
-$env:MEDSAM_CHECKPOINT = "E:\Personal\Build Fest 2026\medsam_vit_b.pth"
-$env:MEDSAM_DEVICE = "cuda:0"
-python -c "import torch; print(torch.cuda.is_available())"
+git clone https://github.com/bowang-lab/MedSAM.git ../MedSAM
+python -m venv .venv
+.venv\Scripts\Activate.ps1
+python -m pip install -e .
 ```
 
-For a fresh machine, create a Python 3.10+ virtual environment, install a
-compatible torch/torchvision build, then `python -m pip install -e .`.
-Clone original [MedSAM](https://github.com/bowang-lab/MedSAM) alongside this repo
-and obtain its official checkpoint; source is imported using `PYTHONPATH`.
-Weights and patient ZIPs are intentionally not in Git. `MEDSAM_DEVICE` defaults
-to CPU if unset; TotalSegmentator selects its device separately.
+`python -m pip install -e .` installs the backend (`app`, `demo`, `imaging`,
+`tabular`) as editable packages, using `backend/requirements.txt`.
 
-Editable installation keeps the established imports (`imaging`, `tabular`,
-`demo`) and `python -m imaging.analyze` commands working after the directory move.
+Set these before running the server:
 
-## Run the app
+```powershell
+$env:PYTHONPATH = (Resolve-Path ..\MedSAM).Path
+$env:MEDSAM_CHECKPOINT = "C:\path\to\medsam_vit_b.pth"
+$env:MEDSAM_DEVICE = "cuda:0"   # omit to fall back to CPU
+```
 
-Backend, in the configured terminal:
+Then install the frontend:
+
+```powershell
+cd frontend
+npm install
+```
+
+Model weights and patient DICOM ZIPs are intentionally excluded from Git
+(see `.gitignore`) — medical imaging data should never be committed.
+
+### Executing program
+
+Run the backend and frontend in two terminals, from the repository root:
 
 ```powershell
 python -m uvicorn app.main:app --host 127.0.0.1 --port 8000
 ```
 
-Frontend, in a second terminal from the repository root (Node 22.12+ or 24):
-
 ```powershell
-npm --prefix frontend ci
-npm --prefix frontend run dev
+cd frontend
+npm run dev
 ```
 
-Open the URL Vite prints (normally http://localhost:5173). Its `/api` proxy points
-to `127.0.0.1:8000`. Upload the **inner patient DICOM ZIP**, complete the questionnaire,
-and click Analyze. The dashboard uses actual results and scan previews, not mocks.
-The API accepts multipart `file` plus JSON `patient` and uses one inference at a
-time to avoid concurrent GPU allocations. Use one backend worker. Uploads are
-temporary, limited to 512 MiB, and deleted after processing. This is a local demo,
-not an authenticated production service.
+Then open the frontend's local URL (Vite prints it, typically
+`http://127.0.0.1:5173`) and:
 
-The dashboard shows questionnaire-only `p_ge_F2` and tier prominently. MRI fat
-and texture are separate measurements, not risk-model inputs. Projection curves
-are population scenarios; the original scan is unchanged. An optional, liver-only illustrative overlay
-changes shading with the slider; it is not a prediction of future MRI appearance.
-Recommendations are deterministic placeholder text; no LLM is connected.
+1. Upload a ZIP containing in-phase and opposed-phase DICOM images
+2. Fill in the short clinical questionnaire
+3. Review the scan, biomarkers, and risk estimate together
 
-## CLI and tests
+## Help
 
-```powershell
-python -m demo.pipeline "E:\Personal\Build Fest 2026\patient33\chaos_patient33.zip" --questionnaire backend/demo/example_questionnaire.json --out debug/demo_patient33/result.json
-python -m imaging.analyze "E:\Personal\Build Fest 2026\patient33\chaos_patient33.zip" --checkpoint "$env:MEDSAM_CHECKPOINT" --device cuda:0 --out debug/texture_patient33
-python -m pytest
-npm --prefix frontend run build
-npm --prefix frontend run lint
-npm --prefix frontend test
-```
+- **`/api/health` returns nothing / connection refused** — the backend
+  isn't running, or the frontend's Vite proxy (`frontend/vite.config.js`)
+  isn't pointed at the right port.
+- **Segmentation fails or is very slow** — confirm `MEDSAM_CHECKPOINT` and
+  `PYTHONPATH` are set correctly, and that `torch.cuda.is_available()`
+  returns `True` if you expect GPU use.
+- **Run the backend test suite:**
 
-`pytest` discovers only `backend/tests`, excluding the old local prototype.
-The optional real-data loader test requires `CHAOS_TEST_ZIP`; other tests mock
-model inference. Keep scripts invoking the loader behind a `__main__` guard for
-Windows worker processes. Backend model and QC files resolve relative to their
-modules, not the current directory.
+  ```powershell
+  python -m pytest
+  ```
 
-See [pipeline handoff](backend/demo/HANDOFF.md),
-[backend setup](backend/README.md), [frontend setup](frontend/README.md),
-[interface contract](docs/interfaces.md), and [branch audit](docs/integration_audit.md).
+- **Run the frontend test suite:**
+
+  ```powershell
+  cd frontend
+  npm test
+  ```
+
+See `backend/README.md` and `docs/` for module-level notes and known
+research limitations.
+
+## Authors
+
+- Sahitha Karapitiya
+- Anish Deshpande
+- Pranav Srikanth Koneri
+- Muthamizharrasu K
+
+## Version History
+
+- **Unreleased** — Editorial frontend redesign; sticky research-notice
+  banner; alcohol-warning and fibrosis-panel layout fixes; combined
+  scan-overlay projection controls. See `git log` for the full history.
+- **0.1** — Initial end-to-end pipeline: DICOM upload, TotalSegmentator/
+  MedSAM liver localization, dual-echo fat and texture measurement,
+  NHANES-trained questionnaire risk model, and the first FastAPI + React
+  integration.
+
+## License
+
+Not yet assigned. Until a license file is added, all rights are reserved
+by the authors above.
+
+## Acknowledgments
+
+- [MedSAM](https://github.com/bowang-lab/MedSAM) — promptable medical
+  image segmentation, used for liver localization
+- [TotalSegmentator](https://github.com/wasserth/TotalSegmentator) —
+  whole-body CT/MRI segmentation, used as a localization fallback
+- [NHANES](https://www.cdc.gov/nchs/nhanes/) — the population data behind
+  the questionnaire risk model's proxy labels

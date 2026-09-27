@@ -66,7 +66,6 @@ export default function DashboardPage({ result, onReset }) {
             <div className="dashboard-main">
               <FibrosisPanel stage={prediction.stage} probs={prediction.probs} pGeF2={prediction.p_ge_F2} tier={prediction.tier} />
               <AlcoholResult result={result.alcoholConsumption} />
-              <TriagePanel recommendation={result.recommendation} />
 
               <BiomarkerPanel
                 fatPct={segmentation.fat_pct}
@@ -97,6 +96,8 @@ export default function DashboardPage({ result, onReset }) {
                   onInterventionChange={setShowIntervention}
                 />
               </div>
+
+              <TriagePanel recommendation={result.recommendation} />
             </div>
 
             <div className="dashboard-sidebar">
