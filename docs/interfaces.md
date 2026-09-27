@@ -3,7 +3,8 @@ load_and_locate(zip_path) -> {
   "op": np.ndarray,   # opposed-phase volume
   "liver_slices": [int],
   "boxes": {slice_idx: [x_min, y_min, x_max, y_max]},
-  "ts_mask": np.ndarray  # TotalSegmentator mask (fallback)
+  "ts_mask": np.ndarray,  # TotalSegmentator mask (fallback)
+  "spacing": (z, y, x)   # voxel size in mm
 }
 
 segment_and_measure(ip, op, liver_slices, boxes, ts_mask) -> {
