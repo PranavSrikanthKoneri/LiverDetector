@@ -15,6 +15,10 @@ CYCLES = {"J": "2017", "L": "2021"}
 FILES = ["DEMO", "BMX", "DIQ", "ALQ", "LUX", "BIOPRO", "CBC"]
 
 FEATURES = ["age", "male", "bmi", "waist_cm", "diabetes", "drinks_week"]
+STAGES = ["F0-F1", "F2", "F3", "F4"]
+
+# Liver stiffness (kPa) cutoffs for fibrosis stage, Eddowes et al. 2019.
+LSM_CUTOFFS_KPA = [8.2, 9.7, 13.6]
 
 # ALQ121 "How often did you drink in the past 12 months?" -> days per year.
 # Codebook ranges are mapped to their midpoints.
@@ -72,10 +76,15 @@ def drinks_per_week(alq111: pd.Series, alq121: pd.Series, alq130: pd.Series) -> 
     return out
 
 
+def stage_from_lsm(lsm_kpa: pd.Series) -> pd.Series:
+    """0 = F0-F1 (<8.2), 1 = F2 (8.2-9.7), 2 = F3 (9.7-13.6), 3 = F4 (>=13.6 kPa)."""
+    return pd.Series(np.digitize(lsm_kpa, LSM_CUTOFFS_KPA), index=lsm_kpa.index)
+
+
 def load_nhanes(cycle: str = "J", verbose: bool = True) -> pd.DataFrame:
     """Merged, cleaned adult cohort with a reliable elastography exam.
 
-    Columns: SEQN, the model FEATURES, lsm_kpa (label source), and the NFS
+    Columns: SEQN, the model FEATURES, lsm_kpa (label source), stage (0-3), and the NFS
     inputs (ast, alt, albumin_gdl, glucose, platelets).
     """
     download(cycle)
@@ -111,6 +120,7 @@ def load_nhanes(cycle: str = "J", verbose: bool = True) -> pd.DataFrame:
         "ast": df["LBXSASSI"], "alt": df["LBXSATSI"], "albumin_gdl": df["LBXSAL"],
         "glucose": df["LBXSGL"], "platelets": df["LBXPLTSI"],
     }).reset_index(drop=True)
+    out["stage"] = stage_from_lsm(out["lsm_kpa"])
     return out
 
 
@@ -118,3 +128,7 @@ if __name__ == "__main__":
     d = load_nhanes("J")
     print(d[FEATURES + ["lsm_kpa"]].describe().T.round(2))
     print("missing per column:\n" + d.isna().sum().to_string())
+    counts = d["stage"].value_counts().sort_index()
+    print("\nclass distribution (label from LSM, Eddowes 2019 cutoffs):")
+    for k, n in counts.items():
+        print(f"  {STAGES[k]:6s} {n:5d}  ({100 * n / len(d):.1f}%)")
