@@ -48,5 +48,40 @@
     "Elastography (LSM) is a proxy for biopsy-staged fibrosis",
     "NFS computed with non-fasting serum glucose from the biochemistry panel",
     "Not diagnostic; for education and research only"
-  ]
+  ],
+  "external_validation": {
+    "data": "NHANES 2021-2023 (cycle L), same inclusion and label rules; model not retrained",
+    "n": 5526,
+    "class_counts": {
+      "F0-F1": 4890,
+      "F2": 220,
+      "F3": 233,
+      "F4": 183
+    },
+    "auroc_ge_F2": {
+      "value": 0.7509,
+      "ci95": [
+        0.7299,
+        0.7692
+      ]
+    },
+    "auroc_ge_F3": {
+      "value": 0.7704,
+      "ci95": [
+        0.746,
+        0.7935
+      ]
+    },
+    "mean_predicted_p_ge_F2": 0.0944,
+    "observed_rate_ge_F2": 0.1151,
+    "n_nfs_subset": 4907,
+    "ours_auroc_on_nfs_subset": {
+      "ge_F2": 0.75,
+      "ge_F3": 0.7728
+    },
+    "nfs_auroc": {
+      "ge_F2": 0.6956,
+      "ge_F3": 0.7209
+    }
+  }
 }
