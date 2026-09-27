@@ -19,8 +19,8 @@ export default function BiomarkerPanel({ fatPct, steatosis, texture, stage, conf
       icon: <TransformIcon />,
       label: "Texture entropy (bits, exploratory)",
       value: texture.entropy.toFixed(2),
-      sub: `Contrast ${texture.contrast.toFixed(2)} · Homogeneity ${texture.homogeneity.toFixed(2)}`,
-      note: `Patient-level texture QC: ${qc.label}${qc.flags.length ? ' — ' + qc.flags.join('; ') : ''}. Measurement stability only; entropy is not a quality score.`,
+      sub: "Measures how varied image patterns are within sampled liver regions. Higher values mean less predictable patterns.",
+      note: `Measurement check: ${qc.label}${qc.flags.length ? ' — ' + qc.flags.join('; ') : ''}.`,
       color: qc.needsReview ? "var(--warning)" : "var(--info)",
     },
     {
