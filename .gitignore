@@ -21,3 +21,6 @@ debug/
 .venv/
 *.pyc
 .pytest_cache/
+
+# NHANES raw files
+*.xpt
