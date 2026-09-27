@@ -26,5 +26,9 @@
     "men": 15
   },
   "critical_from": 20,
-  "maximum_drinks": 200
+  "maximum_drinks": 200,
+  "warning_messages": {
+    "elevated": "Alcohol warning: {drinks} drinks/week meets or exceeds the heavy-drinking threshold.",
+    "critical": "High alcohol intake: {drinks} drinks/week. Discuss your drinking with a healthcare professional."
+  }
 }

@@ -142,8 +142,8 @@ at 20 or more for either sex. Critical overrides Elevated. Fractional averages
 are compared directly with the cutoffs, without rounding. Invalid values raise
 an error instead of defaulting to Low risk.
 
-The frontend displays the backend category, submitted drink count and applicable
-sex range in a separate results card in both dashboard views. If an older API
+The frontend displays a short, conditional warning in both dashboard views;
+Low intake shows no alcohol section. If an older API
 omits `alcohol_consumption`, it derives the same informational category from
 the submitted answers. Both implementations use `demo/alcohol_policy.json`;
 missing or invalid answers remain unavailable rather than defaulting to Low risk. The questionnaire
@@ -154,3 +154,14 @@ consumption. No training or model-weight changes are involved.
 
 The dashboard shows the main questionnaire risk percentage once; the summary
 headline uses the tier without repeating the percentage.
+
+### Compact alcohol warning display
+
+The results page now renders only one short warning for Elevated or Critical
+intake. Low intake (including 10 drinks/week for men) and missing data render no
+alcohol section. No title, table, badge or explanatory card is shown. Elevated
+warnings use smaller amber text; the >=20 project tier uses larger red text
+labelled High alcohol intake, not an emergency or a diagnosis. The backend also
+returns `alcohol_consumption.warning` (null for Low), and both UI compatibility
+rendering and backend messages use `alcohol_policy.json`. Other model inputs and
+predictions are unchanged.

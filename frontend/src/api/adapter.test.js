@@ -67,3 +67,20 @@ test('compatibility calculation uses exact cutoffs and rejects missing answers',
     assert.equal(alcoholFromAnswers(answers), null);
   }
 });
+
+import { alcoholWarning } from './alcohol.js';
+
+test('alcohol warning is hidden for low intake and missing results', () => {
+  assert.equal(alcoholWarning(alcoholFromAnswers({male: 1, drinks_week: 10})), null);
+  assert.equal(alcoholWarning(alcoholFromAnswers({male: 0, drinks_week: 7})), null);
+  assert.equal(alcoholWarning(null), null);
+});
+
+test('elevated and high intake produce one short warning', () => {
+  for (const [male, drinks, severity] of [[0, 8, 'elevated'], [1, 15, 'elevated'], [0, 20, 'critical'], [1, 20, 'critical']]) {
+    const warning = alcoholWarning(alcoholFromAnswers({male, drinks_week: drinks}));
+    assert.equal(warning.severity, severity);
+    assert.ok(warning.message.includes(`${drinks} drinks/week`));
+    assert.ok(warning.message.length < 140);
+  }
+});

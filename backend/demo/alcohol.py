@@ -17,6 +17,8 @@ def alcohol_consumption_info(questionnaire: dict) -> dict:
     # Check critical first: it overrides the overlapping elevated category.
     category = 'critical' if drinks >= POLICY["critical_from"] else 'elevated' if drinks >= elevated_from else 'low'
     return {
+        'warning': ({'severity': category, 'message': POLICY['warning_messages'][category].format(drinks=f'{drinks:g}')}
+                    if category in POLICY['warning_messages'] else None),
         'category': category,
         'label': {'low': 'Low risk', 'elevated': 'Elevated', 'critical': 'Critical'}[category],
         'drinks_week': drinks,

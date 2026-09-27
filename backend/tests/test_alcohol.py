@@ -39,3 +39,14 @@ def test_pipeline_keeps_information_separate_from_model(monkeypatch):
     assert result['risk'] == {**expected, 'tier': 'low'}
     assert result['alcohol_consumption']['category'] == 'critical'
     assert 'alcohol_caveat' not in result['recommendation']
+
+
+@pytest.mark.parametrize('male,drinks,severity', [(1, 10, None), (0, 7, None), (0, 8, 'elevated'), (1, 15, 'elevated'), (0, 20, 'critical'), (1, 20, 'critical')])
+def test_warning_visibility_and_severity(male, drinks, severity):
+    result = alcohol_consumption_info({'male': male, 'drinks_week': drinks})
+    if severity is None:
+        assert result['warning'] is None
+    else:
+        assert result['warning']['severity'] == severity
+        assert f'{drinks} drinks/week' in result['warning']['message']
+        assert len(result['warning']['message']) < 140
