@@ -283,6 +283,50 @@ def summarize_texture(slice_features):
         raise ValueError("Texture measurements must be finite")
     return dict(zip(names, map(float, values.mean(axis=0))))
 
+def segment_and_measure(ip, op, liver_slices, boxes, ts_mask, *,
+                        checkpoint=None, device=None, spacing=None, model=None):
+    """Shared measurement entry point for CLI, demo and HTTP API.
+
+    Five positional inputs preserve the team contract. Checkpoint/device can be
+    configured through MEDSAM_CHECKPOINT and MEDSAM_DEVICE (default cpu).
+    Pass spacing in (z,y,x) order to include measurement stability QC.
+    """
+    import json
+    import os
+    if not liver_slices:
+        raise ValueError("Loader returned no liver slices")
+    if model is None:
+        checkpoint = checkpoint or os.environ.get("MEDSAM_CHECKPOINT")
+        if not checkpoint:
+            raise ValueError("Set MEDSAM_CHECKPOINT to the medsam_vit_b.pth file")
+        model = load_medsam(checkpoint, device or os.environ.get("MEDSAM_DEVICE", "cpu"))
+    reports, masks, candidates = {}, {}, {}
+    for idx in liver_slices:
+        idx = int(idx)
+        candidate = segment_slice(ip[idx], boxes[idx], model)
+        mask, report = select_mask(candidate, ts_mask[idx], boxes[idx])
+        fat, fat_details = measure_fat_slice(ip[idx], op[idx], mask)
+        texture, texture_details = measure_texture_slice(ip[idx], mask)
+        report.update(selected_pixels=int(mask.sum()), fat_pct=fat,
+                      fat_measurement=fat_details, texture=texture,
+                      texture_measurement=texture_details)
+        reports[str(idx)], masks[idx], candidates[idx] = report, mask, candidate
+    result = {"masks": masks, "candidates": candidates, "quality_report": reports,
+              **summarize_fat([r["fat_pct"] for r in reports.values()]),
+              "texture": summarize_texture([r["texture"] for r in reports.values()])}
+    if spacing is not None:
+        from imaging.chaos_texture_qc import volume_record, DEFAULT_REFERENCE
+        from imaging.texture_quality import compare_quality
+        qc = volume_record("input_scan", ip, masks, spacing[::-1], "selected_model_masks")
+        qc["reference_context"] = (
+            compare_quality(qc, json.loads(DEFAULT_REFERENCE.read_text())["records"])
+            if DEFAULT_REFERENCE.exists() else {"status": "reference_unavailable"})
+        result["texture_quality"] = qc
+    else:
+        result["texture_quality"] = {"quality": {"status": "unavailable", "flags": ["missing_spacing"]}}
+    return result
+
+
 def main():
     """Check kept liver slices; save candidate/selected masks and diagnostics."""
     import argparse
@@ -306,30 +350,15 @@ def main():
         raise ValueError("Loader returned no liver slices")
     output = Path(args.out)
     output.mkdir(parents=True, exist_ok=True)
-    reports = {}
-    slice_percentages = []
-    slice_textures = []
-    selected_masks = {}
+    result = segment_and_measure(inputs["ip"], inputs["op"], slices, inputs["boxes"],
+                                 inputs["ts_mask"], model=model, spacing=inputs["spacing"])
+    reports = result["quality_report"]
+    slice_percentages = [r["fat_pct"] for r in reports.values()]
+    slice_textures = [r["texture"] for r in reports.values()]
     for idx in slices:
         image, box = inputs["ip"][idx], inputs["boxes"][idx]
-        print(f"Running MedSAM on slice {idx}, box {box}", flush=True)
-        candidate = segment_slice(image, box, model)
-        mask, report = select_mask(candidate, inputs["ts_mask"][idx], box)
-        selected_masks[int(idx)] = mask
-        report["selected_pixels"] = int(mask.sum())
-        try:
-            fat_pct, counts = measure_fat_slice(image, inputs["op"][idx], mask)
-        except ValueError as exc:
-            # Do not silently drop a kept slice or substitute a zero measurement.
-            raise ValueError(f"Cannot measure fat on slice {idx}: {exc}") from exc
-        report["fat_pct"] = fat_pct
-        report["fat_measurement"] = counts
-        texture, texture_details = measure_texture_slice(image, mask)
-        report["texture"] = texture
-        report["texture_measurement"] = texture_details
-        slice_textures.append(texture)
-        slice_percentages.append(fat_pct)
-        reports[str(idx)] = report
+        candidate, mask = result["candidates"][idx], result["masks"][idx]
+        report = reports[str(idx)]
         np.save(output / f"medsam_{idx:03d}.npy", candidate)
         np.save(output / f"mask_{idx:03d}.npy", mask)
         preview = cv2.cvtColor(to_uint8(image), cv2.COLOR_GRAY2BGR)
@@ -356,15 +385,7 @@ def main():
                        "slices": [int(idx) for idx in slices]}
     (output / "texture_summary.json").write_text(
         json.dumps(texture_summary, indent=2), encoding="utf-8")
-    from imaging.chaos_texture_qc import volume_record, DEFAULT_REFERENCE
-    from imaging.texture_quality import compare_quality
-    qc = volume_record("input_scan", inputs["ip"], selected_masks,
-                       inputs["spacing"][::-1], "selected_model_masks")
-    if DEFAULT_REFERENCE.exists():
-        reference = json.loads(DEFAULT_REFERENCE.read_text())
-        qc["reference_context"] = compare_quality(qc, reference["records"])
-    else:
-        qc["reference_context"] = {"status": "reference_unavailable"}
+    qc = result["texture_quality"]
     (output / "texture_quality.json").write_text(
         json.dumps(qc, indent=2, allow_nan=False), encoding="utf-8")
     print(f"Texture measurement QC: {qc['quality']['status']}; {qc['quality']['flags']}")

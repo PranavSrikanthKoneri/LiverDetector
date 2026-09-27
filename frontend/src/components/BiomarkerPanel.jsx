@@ -1,7 +1,7 @@
 import { OpacityIcon, TransformIcon, LayersIcon, ActivityLogIcon } from "@radix-ui/react-icons";
 import "./BiomarkerPanel.css";
 
-export default function BiomarkerPanel({ fatPct, steatosis, texture, stage, confidence }) {
+export default function BiomarkerPanel({ fatPct, steatosis, texture, stage, confidence, warnings = [], textureQuality }) {
   const confidencePct = (confidence * 100).toFixed(0);
 
   const listItems = [
@@ -9,27 +9,27 @@ export default function BiomarkerPanel({ fatPct, steatosis, texture, stage, conf
       icon: <OpacityIcon />,
       label: "Liver Fat",
       value: `${fatPct.toFixed(1)}%`,
-      sub: steatosis ? "Steatosis (>5%)" : "Normal",
+      sub: warnings.length ? "Clipped estimate — review required" : steatosis ? "Above prototype 5% threshold" : "Below prototype 5% threshold",
       color: steatosis ? "var(--warning)" : "var(--success)",
       meter: Math.min(fatPct / 50, 1),
     },
     {
       icon: <TransformIcon />,
-      label: "GLCM Texture",
+      label: "GLCM Texture (exploratory)",
       value: texture.entropy.toFixed(2),
-      sub: `Contrast ${texture.contrast.toFixed(2)} · Homogeneity ${texture.homogeneity.toFixed(2)}`,
+      sub: `Contrast ${texture.contrast.toFixed(2)} · Homogeneity ${texture.homogeneity.toFixed(2)} · QC: ${textureQuality?.quality?.status ?? 'unavailable'} ${(textureQuality?.quality?.flags ?? []).join(', ')}`,
       color: "var(--info)",
       meter: texture.entropy / 8,
     },
     {
       icon: <LayersIcon />,
-      label: "Fibrosis Stage",
+      label: "Most likely proxy class",
       value: stage,
       color: stage === "F0-F1" ? "var(--f0-color)" : stage === "F2" ? "var(--f2-color)" : stage === "F3" ? "var(--f3-color)" : "var(--f4-color)",
     },
     {
       icon: <ActivityLogIcon />,
-      label: "Confidence",
+      label: "Class probability",
       value: `${confidencePct}%`,
       color: confidence >= 0.6 ? "var(--success)" : confidence >= 0.4 ? "var(--warning)" : "var(--danger)",
       meter: confidence,
@@ -40,7 +40,7 @@ export default function BiomarkerPanel({ fatPct, steatosis, texture, stage, conf
     <div className="biomarker-panel" id="biomarker-panel">
       <h3 style={{ marginBottom: "var(--space-4)" }}>Biomarkers</h3>
       <div className="biomarker-list">
-        {listItems.map((item, i) => (
+        {listItems.map((item) => (
           <div className="biomarker-list-item" key={item.label}>
             <div className="biomarker-item-icon" style={{ color: item.color }}>
               {item.icon}

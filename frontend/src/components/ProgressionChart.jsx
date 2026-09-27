@@ -61,7 +61,7 @@ export default function ProgressionChart({
             <input
               type="range"
               id="year-slider"
-              min={1}
+              min={0}
               max={20}
               value={years}
               onChange={(e) => onYearsChange(parseInt(e.target.value, 10))}
@@ -80,7 +80,7 @@ export default function ProgressionChart({
           </div>
           <div className="progression-toggle-label">
             <span style={{ fontWeight: 500, fontSize: "0.8125rem" }}>
-              Lifestyle Intervention
+              Slower-progression scenario
             </span>
           </div>
         </div>
@@ -159,7 +159,7 @@ export default function ProgressionChart({
               <Line
                 type="monotone"
                 dataKey="intervention"
-                name="Intervention"
+                name="Slower scenario"
                 stroke="#34c759"
                 strokeWidth={2}
                 strokeDasharray="4 3"
@@ -181,7 +181,7 @@ export default function ProgressionChart({
         {showIntervention && (
           <div className="progression-legend-item">
             <div className="progression-legend-line progression-legend-line-dashed" style={{ borderTopColor: "#34c759" }} />
-            <span>Intervention scenario</span>
+            <span>Slower population scenario</span>
           </div>
         )}
       </div>

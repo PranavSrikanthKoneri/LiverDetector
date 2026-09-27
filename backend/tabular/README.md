@@ -57,7 +57,7 @@ weights), saved as `tabular/risk_model.joblib`. Metrics are also in
 ```bash
 python -m tabular.train      # 5-fold CV + NFS baseline, saves model + card (~6 s)
 python -m tabular.validate   # external validation on NHANES 2021-2023
-python -m pytest tests/test_tabular.py
+python -m pytest backend/tests/test_tabular.py
 ```
 
 ## Results

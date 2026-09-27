@@ -27,14 +27,14 @@ export default function QuestionnairePage({ onBack, onSubmit }) {
 
   function validate() {
     const errs = {};
-    if (!form.age || isNaN(form.age) || +form.age < 18 || +form.age > 120)
+    if (!form.age || !Number.isInteger(+form.age) || +form.age < 18 || +form.age > 120)
       errs.age = "Enter a valid age (18–120)";
     if (!form.bmi || isNaN(form.bmi) || +form.bmi < 10 || +form.bmi > 80)
       errs.bmi = "Enter a valid BMI (10–80)";
-    if (!form.waist_cm || isNaN(form.waist_cm) || +form.waist_cm < 40 || +form.waist_cm > 200)
-      errs.waist_cm = "Enter a valid waist circumference (40–200 cm)";
-    if (form.drinks_week === "" || isNaN(form.drinks_week) || +form.drinks_week < 0)
-      errs.drinks_week = "Enter weekly alcohol intake (0+)";
+    if (form.waist_cm !== "" && (isNaN(form.waist_cm) || +form.waist_cm < 40 || +form.waist_cm > 250))
+      errs.waist_cm = "Enter a valid waist circumference (40–250 cm) or leave blank";
+    if (form.drinks_week === "" || !Number.isFinite(+form.drinks_week) || +form.drinks_week < 0 || +form.drinks_week > 200)
+      errs.drinks_week = "Enter weekly alcohol intake (0–200)";
     return errs;
   }
 
@@ -47,11 +47,11 @@ export default function QuestionnairePage({ onBack, onSubmit }) {
     }
     onSubmit({
       age: parseInt(form.age, 10),
-      male: form.male === "1",
+      male: Number(form.male),
       bmi: parseFloat(form.bmi),
-      waist_cm: parseFloat(form.waist_cm),
-      diabetes: form.diabetes === "1",
-      drinks_week: parseInt(form.drinks_week, 10),
+      waist_cm: form.waist_cm === "" ? null : parseFloat(form.waist_cm),
+      diabetes: Number(form.diabetes),
+      drinks_week: parseFloat(form.drinks_week),
     });
   }
 
@@ -99,7 +99,7 @@ export default function QuestionnairePage({ onBack, onSubmit }) {
             </div>
 
             <div className="input-group">
-              <label className="input-label" htmlFor="q-waist">Waist Circumference (cm)</label>
+              <label className="input-label" htmlFor="q-waist">Waist Circumference (cm, optional)</label>
               <input
                 id="q-waist"
                 className={`input-field ${errors.waist_cm ? "input-error" : ""}`}
@@ -118,6 +118,7 @@ export default function QuestionnairePage({ onBack, onSubmit }) {
                 id="q-drinks"
                 className={`input-field ${errors.drinks_week ? "input-error" : ""}`}
                 type="number"
+                step="0.1"
                 placeholder="e.g. 3"
                 value={form.drinks_week}
                 onChange={(e) => update("drinks_week", e.target.value)}
@@ -147,7 +148,8 @@ export default function QuestionnairePage({ onBack, onSubmit }) {
                 onChange={(e) => update("diabetes", e.target.value)}
               >
                 <option value="0">No</option>
-                <option value="1">Yes</option>
+                <option value="1">Borderline</option>
+                <option value="2">Yes</option>
               </select>
             </div>
           </div>

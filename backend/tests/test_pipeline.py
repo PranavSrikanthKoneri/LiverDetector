@@ -14,13 +14,14 @@ FAKE_FAT = {"status": "ok", "fat_pct": 27.0, "steatosis": True,
 @pytest.fixture
 def mock_imaging(monkeypatch):
     monkeypatch.setattr(pipeline, "load_and_locate", lambda zip_path: load_and_locate_mock())
+    monkeypatch.setattr(pipeline, "measure_liver", lambda img: FAKE_FAT)
 
 
-def test_pipeline_json_serializable_with_fat_pending(mock_imaging):
+def test_pipeline_json_serializable(mock_imaging):
     r = pipeline.run_pipeline("unused.zip", Q)
     json.dumps(r)  # must not raise: FastAPI returns this as-is
     assert set(r) == {"imaging", "risk", "projection", "recommendation", "disclaimer"}
-    assert r["imaging"]["status"] in ("pending", "ok")
+    assert r["imaging"]["status"] == "ok"
     assert len(r["projection"]["typical"]) == len(r["projection"]["slower"]) == 21
 
 

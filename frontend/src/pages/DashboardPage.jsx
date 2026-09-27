@@ -58,8 +58,8 @@ export default function DashboardPage({ result, onReset }) {
         {activeTab === "pcp" ? (
           <div className="dashboard-content" key="pcp">
             <div className="dashboard-main">
-              <FibrosisPanel stage={prediction.stage} probs={prediction.probs} />
-              <TriagePanel stage={prediction.stage} probs={prediction.probs} fatPct={segmentation.fat_pct} />
+              <FibrosisPanel stage={prediction.stage} probs={prediction.probs} pGeF2={prediction.p_ge_F2} tier={prediction.tier} />
+              <TriagePanel recommendation={result.recommendation} />
               
               <BiomarkerPanel
                 fatPct={segmentation.fat_pct}
@@ -67,6 +67,8 @@ export default function DashboardPage({ result, onReset }) {
                 texture={segmentation.texture}
                 stage={prediction.stage}
                 confidence={Math.max(...prediction.probs)}
+                warnings={segmentation.warnings}
+                textureQuality={segmentation.texture_quality}
               />
 
               <div className="dashboard-progression-section">
@@ -105,7 +107,8 @@ export default function DashboardPage({ result, onReset }) {
                 <h3>Your Results — What They Mean</h3>
               </div>
 
-              <FibrosisPanel stage={prediction.stage} probs={prediction.probs} simplified />
+              <FibrosisPanel stage={prediction.stage} probs={prediction.probs} pGeF2={prediction.p_ge_F2} tier={prediction.tier} simplified />
+              <TriagePanel recommendation={result.recommendation} />
 
               <div className="dashboard-progression-section">
                 <div className="dashboard-section-header">

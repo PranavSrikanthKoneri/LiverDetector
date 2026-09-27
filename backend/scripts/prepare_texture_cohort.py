@@ -1,6 +1,6 @@
 """Package extracted CHAOS training MR cases and write a portable GPU manifest.
 
-python scripts/prepare_texture_cohort.py C:/data/Train_Sets/MR --out data/texture_cohort
+python backend/scripts/prepare_texture_cohort.py C:/data/Train_Sets/MR --out data/texture_cohort
 Does not run any models. Only T1DUAL/DICOM_anon files are packaged.
 """
 import argparse
@@ -31,7 +31,7 @@ def main():
         cases.append({'case_id': case_id, 'zip_path': dest.name,
                       'results_dir': f'results/{case_id}'})
     (args.out / 'manifest.json').write_text(json.dumps({'cohort': 'CHAOS MR training set', 'cases': cases}, indent=2))
-    print(f'Prepared {len(cases)} cases. Run scripts/run_texture_cohort.py on the GPU computer.')
+    print(f'Prepared {len(cases)} cases. Run backend/scripts/run_texture_cohort.py on the GPU computer.')
 
 
 if __name__ == '__main__':

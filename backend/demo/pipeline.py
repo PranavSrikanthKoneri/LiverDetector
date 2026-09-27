@@ -2,11 +2,11 @@
 
     python -m demo.pipeline path/to/case.zip --questionnaire demo/example_questionnaire.json
 
-READ demo/HANDOFF.md FIRST if you are extending this file (human or coding agent).
+READ backend/demo/HANDOFF.md FIRST if you are extending this file (human or coding agent).
 
 Steps, in the order POST /analyze should run them (docs/tasks.md):
   1. imaging.load.load_and_locate(zip)        Person 1  DONE
-  2. imaging.analyze.segment_and_measure(...) Person 2  PENDING -> measure_liver() plugs it in
+  2. imaging.analyze.segment_and_measure(...) Person 2  CONNECTED with diagnostics and texture QC
   3. tabular.predict.predict_stage(q)         Person 3  DONE
   4. tabular.progression.project(...)         Person 3  DONE
   5. recommend(...)                           Person 4  PLACEHOLDER rules, to be replaced/extended
@@ -16,6 +16,8 @@ Everything returned is JSON-serializable (no numpy arrays), ready for FastAPI.
 """
 import argparse
 import json
+import base64
+from pathlib import Path
 
 from imaging.load import load_and_locate
 from tabular.predict import predict_stage
@@ -37,24 +39,33 @@ PROJECTION_YEARS = list(range(0, 21))  # frontend slider is 0-20 years
 # ------------------------------------------------------------ step 2 (Person 2)
 
 def measure_liver(img: dict) -> dict:
-    """Fat % and texture from Person 2's segment_and_measure(), if it is merged.
+    """Run shared measurements, preserve QC, and encode selected masks as previews."""
+    from imaging.analyze import segment_and_measure
+    from imaging.cli import to_uint8
+    import cv2
+    import numpy as np
 
-    Contract (docs/interfaces.md):
-      segment_and_measure(ip, op, liver_slices, boxes, ts_mask) -> {
-        "masks": {slice_idx: ndarray}, "fat_pct": float, "steatosis": bool,
-        "texture": {"contrast", "homogeneity", "entropy"}}
-    Until it exists, returns status "pending" with None values so the rest of
-    the pipeline still runs. Masks are dropped here (arrays are not JSON).
-    """
-    try:
-        from imaging.analyze import segment_and_measure
-    except ImportError:
-        return {"status": "pending", "fat_pct": None, "steatosis": None, "texture": None,
-                "note": "imaging.analyze.segment_and_measure not merged yet (Person 2)"}
-
-    r = segment_and_measure(img["ip"], img["op"], img["liver_slices"], img["boxes"], img["ts_mask"])
+    r = segment_and_measure(img["ip"], img["op"], img["liver_slices"], img["boxes"], img["ts_mask"], spacing=img["spacing"])
+    masks = {}
+    for idx, mask in r["masks"].items():
+        gray = to_uint8(img["ip"][idx])
+        overlay = cv2.cvtColor(gray, cv2.COLOR_GRAY2BGR)
+        contours, _ = cv2.findContours(mask.astype(np.uint8), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+        cv2.drawContours(overlay, contours, -1, (0, 255, 255), 1)
+        def encode(image):
+            ok, data = cv2.imencode(".png", image)
+            if not ok:
+                raise RuntimeError("Could not encode preview")
+            return "data:image/png;base64," + base64.b64encode(data).decode("ascii")
+        masks[str(idx)] = {"width": int(mask.shape[1]), "height": int(mask.shape[0]),
+                           "liverPixels": int(mask.sum()), "image": encode(gray), "overlay": encode(overlay)}
+    warnings = sorted({warning for report in r["quality_report"].values()
+                       for warning in report["fat_measurement"]["warnings"]})
     return {"status": "ok", "fat_pct": float(r["fat_pct"]), "steatosis": bool(r["steatosis"]),
-            "texture": {k: float(v) for k, v in r["texture"].items()}}
+            "texture": {k: float(v) for k, v in r["texture"].items()},
+            "masks": masks, "quality_report": r["quality_report"],
+            "texture_quality": r["texture_quality"], "warnings": warnings,
+            "texture_label": "exploratory"}
 
 
 # ------------------------------------------------------------ step 5 (Person 4)
@@ -82,7 +93,9 @@ def recommend(risk: dict, liver: dict) -> dict:
     }[tier]
 
     points = []
-    if liver["status"] == "ok" and liver["steatosis"]:
+    if liver.get("warnings"):
+        points.append("The two-echo fat estimate includes clipping warnings and needs review; zero does not establish absence of fat.")
+    elif liver["status"] == "ok" and liver["steatosis"]:
         points.append(f"The MRI estimate shows extra fat in the liver (about {liver['fat_pct']:.0f}%).")
     elif liver["status"] == "ok":
         points.append(f"The MRI estimate shows little liver fat (about {liver['fat_pct']:.0f}%).")
@@ -140,6 +153,7 @@ def main():
     result = run_pipeline(args.zip_path, q)
     text = json.dumps(result, indent=2)
     if args.out:
+        Path(args.out).parent.mkdir(parents=True, exist_ok=True)
         with open(args.out, "w") as f:
             f.write(text)
 

@@ -1,0 +1,26 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "livercast-backend"
+version = "0.1.0"
+description = "LiverCast research demo backend"
+requires-python = ">=3.10"
+dynamic = ["dependencies"]
+
+[tool.setuptools.dynamic]
+dependencies = {file = ["backend/requirements.txt"]}
+
+[tool.setuptools.packages.find]
+where = ["backend"]
+include = ["app*", "imaging*", "tabular*", "demo*"]
+
+[tool.setuptools.package-data]
+imaging = ["resources/*.json"]
+tabular = ["*.joblib", "*.json"]
+demo = ["*.json"]
+
+[tool.pytest.ini_options]
+testpaths = ["backend/tests"]
+pythonpath = ["backend"]

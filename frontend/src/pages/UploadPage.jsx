@@ -106,13 +106,14 @@ export default function UploadPage({ onNext }) {
           <button
             className="btn btn-primary btn-lg"
             onClick={() => onNext(file)}
+            disabled={!file || !file.name.toLowerCase().endsWith('.zip')}
             id="upload-continue-btn"
           >
             Continue
             <ArrowRightIcon width={18} height={18} />
           </button>
           <p className="text-tertiary" style={{ fontSize: "0.75rem", textAlign: "center" }}>
-            Optional during dev — proceed to use mock data.
+            Select a ZIP containing in-phase and opposed-phase DICOM images.
           </p>
         </div>
       </div>

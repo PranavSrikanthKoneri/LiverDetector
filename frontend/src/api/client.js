@@ -1,52 +1,15 @@
-/**
- * API layer — abstracts data fetching so the frontend can swap from
- * mock data to the real FastAPI backend with a single config change.
- *
- * Set USE_MOCK = false and update API_BASE when the backend is ready.
- */
+import { adaptResult } from "./adapter";
 
-import { mockFullResult } from "./mockData";
-
-// ── Configuration ─────────────────────────────────
-const USE_MOCK = true;
-const API_BASE = "/api"; // Change to the real backend URL when ready
-
-// ── Simulated network delay for realistic feel ───
-function delay(ms = 800) {
-  return new Promise((resolve) => setTimeout(resolve, ms));
-}
-
-/**
- * POST /analyze
- * Sends patient inputs + MRI file, returns the full result object.
- *
- * @param {object} params
- * @param {File|null} params.mriFile  - the uploaded MRI zip
- * @param {object}    params.patient  - questionnaire answers
- * @returns {Promise<object>} full analysis result
- */
+/** Real backend inference; failures are never replaced with mock results. */
 export async function analyzePatient({ mriFile, patient }) {
-  if (USE_MOCK) {
-    await delay(1200);
-    // Merge submitted patient data into the mock result
-    return {
-      ...mockFullResult,
-      patient: { ...mockFullResult.patient, ...patient },
-    };
-  }
-
+  if (!mriFile) throw new Error("Choose a DICOM ZIP archive first.");
   const formData = new FormData();
-  if (mriFile) formData.append("file", mriFile);
+  formData.append("file", mriFile);
   formData.append("patient", JSON.stringify(patient));
-
-  const res = await fetch(`${API_BASE}/analyze`, {
-    method: "POST",
-    body: formData,
-  });
-
-  if (!res.ok) {
-    throw new Error(`Analysis failed: ${res.status} ${res.statusText}`);
+  const response = await fetch("/api/analyze", { method: "POST", body: formData });
+  if (!response.ok) {
+    const body = await response.json().catch(() => ({}));
+    throw new Error(typeof body.detail === "string" ? body.detail : `Analysis failed: ${response.status}`);
   }
-
-  return res.json();
+  return adaptResult(await response.json(), patient);
 }

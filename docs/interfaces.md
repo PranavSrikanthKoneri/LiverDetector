@@ -24,3 +24,22 @@ project(stage, years, slow: bool) -> {"stage_value": float, "low": float, "high"
   "years_per_stage": float, "source": str}   # stage_value 0.5 (F0-F1) .. 4.0 (capped)
 
 summarize(all_results) -> {"text": str}   # LLM
+
+Integration layout: these Python packages now live under backend/. Install the
+repository with `python -m pip install -e .` to keep the imports above available.
+
+HTTP demo contract:
+  POST /api/analyze
+  multipart fields: file (DICOM ZIP), patient (JSON string with q above)
+  returns demo.pipeline.run_pipeline's JSON object:
+    imaging, risk, projection, recommendation, disclaimer
+  GET /api/health -> {"status": "ok"}
+
+segment_and_measure also accepts keyword-only checkpoint, device, spacing (z,y,x),
+and model. Defaults use MEDSAM_CHECKPOINT and MEDSAM_DEVICE. Its extra outputs are
+quality_report, texture_quality, and candidates. The pipeline preserves these
+diagnostics and encodes selected-mask/grayscale previews as PNG data URLs instead
+of returning NumPy arrays. imaging.warnings reports fat clipping; texture_quality
+contains measurement-stability flags, not disease severity. Imaging is not an
+input to the questionnaire model. LLM summarize remains unimplemented; the demo
+uses rule-based recommendation text.

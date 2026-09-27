@@ -48,8 +48,8 @@ uv venv --python 3.11 .venv && uv pip install --python .venv/bin/python -r requi
 .venv/bin/python -m imaging.cli case.zip --out debug/ --ground path/to/T1DUAL/Ground  # + Dice
 
 # Tests (the real-data test only runs if CHAOS_TEST_ZIP is set)
-.venv/bin/python -m pytest tests/
-CHAOS_TEST_ZIP=data/chaos_patient1.zip .venv/bin/python -m pytest tests/
+.venv/bin/python -m pytest backend/tests/
+CHAOS_TEST_ZIP=data/chaos_patient1.zip .venv/bin/python -m pytest backend/tests/
 ```
 
 To make a CHAOS test zip from the
