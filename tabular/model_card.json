@@ -1,0 +1,52 @@
+{
+  "model": "XGBClassifier multi:softprob (n_estimators=300, max_depth=3, lr=0.05)",
+  "features": [
+    "age",
+    "male",
+    "bmi",
+    "waist_cm",
+    "diabetes",
+    "drinks_week"
+  ],
+  "classes": [
+    "F0-F1",
+    "F2",
+    "F3",
+    "F4"
+  ],
+  "n_train": 4746,
+  "class_counts": {
+    "F0-F1": 4291,
+    "F2": 165,
+    "F3": 170,
+    "F4": 120
+  },
+  "cv_auroc_ge_F2": {
+    "mean": 0.7745,
+    "sd": 0.0177
+  },
+  "cv_auroc_ge_F3": {
+    "mean": 0.7948,
+    "sd": 0.0234
+  },
+  "cv_recall_per_class": {
+    "F0-F1": 0.9977,
+    "F2": 0.0,
+    "F3": 0.0118,
+    "F4": 0.0833
+  },
+  "nfs_auroc_ge_F2": 0.7305,
+  "nfs_auroc_ge_F3": 0.7536,
+  "ours_auroc_on_nfs_subset": {
+    "ge_F2": 0.7751,
+    "ge_F3": 0.7931
+  },
+  "n_nfs_subset": 4424,
+  "label_source": "NHANES 2017-2018 transient elastography LSM; cutoffs 8.2/9.7/13.6 kPa, Eddowes 2019",
+  "limitations": [
+    "NHANES survey weights not applied; metrics describe the sample, not the US population",
+    "Elastography (LSM) is a proxy for biopsy-staged fibrosis",
+    "NFS computed with non-fasting serum glucose from the biochemistry panel",
+    "Not diagnostic; for education and research only"
+  ]
+}
