@@ -71,3 +71,17 @@ def test_api_missing_model_configuration(monkeypatch):
     monkeypatch.delenv("MEDSAM_CHECKPOINT", raising=False)
     response = TestClient(api.app).post("/api/analyze", data={"patient": json.dumps(Q)}, files={"file": ("scan.zip", b"x")})
     assert response.status_code == 503
+
+
+def test_projection_mask_only_covers_selected_liver(measured):
+    import base64
+    import cv2
+    result = pipeline.run_pipeline('unused.zip', Q)
+    preview = result['imaging']['masks']['0']
+    data = base64.b64decode(preview['projectionMask'].split(',', 1)[1])
+    mask_rgba = cv2.imdecode(np.frombuffer(data, dtype=np.uint8), cv2.IMREAD_UNCHANGED)
+    assert mask_rgba.shape == (40, 40, 4)
+    np.testing.assert_array_equal(mask_rgba[..., 3] > 0, measured['ts_mask'][0].astype(bool))
+    assert not mask_rgba[..., :3].any()
+    gray = cv2.imdecode(np.frombuffer(base64.b64decode(preview['image'].split(',', 1)[1]), dtype=np.uint8), cv2.IMREAD_UNCHANGED)
+    assert gray.ndim == 2  # source preview is still grayscale, separate from shading

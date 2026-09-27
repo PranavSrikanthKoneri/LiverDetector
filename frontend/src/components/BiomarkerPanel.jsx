@@ -1,9 +1,7 @@
 import { OpacityIcon, TransformIcon, LayersIcon, ActivityLogIcon } from "@radix-ui/react-icons";
 import "./BiomarkerPanel.css";
-import { describeTextureQuality } from "../api/textureDisplay.js";
 
-export default function BiomarkerPanel({ fatPct, steatosis, texture, stage, confidence, warnings = [], textureQuality }) {
-  const qc = describeTextureQuality(textureQuality);
+export default function BiomarkerPanel({ fatPct, steatosis, texture, stage, confidence, warnings = [] }) {
   const confidencePct = (confidence * 100).toFixed(0);
 
   const listItems = [
@@ -17,11 +15,10 @@ export default function BiomarkerPanel({ fatPct, steatosis, texture, stage, conf
     },
     {
       icon: <TransformIcon />,
-      label: "Texture entropy (bits, exploratory)",
+      label: "Texture entropy",
       value: texture.entropy.toFixed(2),
       sub: "Measures how varied image patterns are within sampled liver regions. Higher values mean less predictable patterns.",
-      note: `Measurement check: ${qc.label}${qc.flags.length ? ' — ' + qc.flags.join('; ') : ''}.`,
-      color: qc.needsReview ? "var(--warning)" : "var(--info)",
+      color: "var(--info)",
     },
     {
       icon: <LayersIcon />,

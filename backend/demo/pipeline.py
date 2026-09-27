@@ -58,8 +58,11 @@ def measure_liver(img: dict) -> dict:
             if not ok:
                 raise RuntimeError("Could not encode preview")
             return "data:image/png;base64," + base64.b64encode(data).decode("ascii")
+        projection_mask = np.zeros((*mask.shape, 4), dtype=np.uint8)
+        projection_mask[..., 3] = mask.astype(bool).astype(np.uint8) * 255
         masks[str(idx)] = {"width": int(mask.shape[1]), "height": int(mask.shape[0]),
-                           "liverPixels": int(mask.sum()), "image": encode(gray), "overlay": encode(overlay)}
+                           "liverPixels": int(mask.sum()), "image": encode(gray), "overlay": encode(overlay),
+                           "projectionMask": encode(projection_mask)}
     warnings = sorted({warning for report in r["quality_report"].values()
                        for warning in report["fat_measurement"]["warnings"]})
     return {"status": "ok", "fat_pct": float(r["fat_pct"]), "steatosis": bool(r["steatosis"]),

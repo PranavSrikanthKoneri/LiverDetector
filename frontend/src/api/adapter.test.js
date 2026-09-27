@@ -84,3 +84,17 @@ test('elevated and high intake produce one short warning', () => {
     assert.ok(warning.message.length < 140);
   }
 });
+
+import { projectionAtYear, projectionOpacity } from './projectionDisplay.js';
+
+test('projection overlay follows year and scenario and respects stage zero', () => {
+  const projection = {baseline: [{year: 0, stage_value: 0}, {year: 10, stage_value: 3}], intervention: [{year: 0, stage_value: 0}, {year: 10, stage_value: 1.5}]};
+  assert.equal(projectionAtYear(projection, 0, false), 0);
+  assert.equal(projectionOpacity(projectionAtYear(projection, 0, false)), 0);
+  assert.equal(projectionAtYear(projection, 10, false), 3);
+  assert.ok(projectionOpacity(projectionAtYear(projection, 10, true)) < projectionOpacity(projectionAtYear(projection, 10, false)));
+  assert.equal(projectionAtYear(projection, 11, false), null);
+  assert.equal(projectionOpacity(null), 0);
+  assert.equal(projectionOpacity(10), .6);
+  assert.equal(projectionOpacity(-1), 0);
+});

@@ -73,6 +73,10 @@ export default function ProgressionChart({
         <div
           className="toggle-container"
           onClick={() => onInterventionChange((v) => !v)}
+          role="switch"
+          aria-checked={showIntervention}
+          tabIndex={0}
+          onKeyDown={event => { if (event.key === " " || event.key === "Enter") { event.preventDefault(); onInterventionChange(v => !v); } }}
           id="intervention-toggle"
         >
           <div className={`toggle-track ${showIntervention ? "active" : ""}`}>
@@ -80,11 +84,13 @@ export default function ProgressionChart({
           </div>
           <div className="progression-toggle-label">
             <span style={{ fontWeight: 500, fontSize: "0.8125rem" }}>
-              Slower-progression scenario
+              Healthy lifestyle scenario (illustrative)
             </span>
           </div>
         </div>
       </div>
+
+      <p className="text-tertiary" style={{ fontSize: "0.75rem" }}>The lifestyle scenario is an illustrative comparison, not a predicted benefit from lifestyle changes.</p>
 
       {/* Chart */}
       <div className="progression-chart-container">
@@ -159,7 +165,7 @@ export default function ProgressionChart({
               <Line
                 type="monotone"
                 dataKey="intervention"
-                name="Slower scenario"
+                name="Healthy lifestyle scenario"
                 stroke="#34c759"
                 strokeWidth={2}
                 strokeDasharray="4 3"
@@ -181,7 +187,7 @@ export default function ProgressionChart({
         {showIntervention && (
           <div className="progression-legend-item">
             <div className="progression-legend-line progression-legend-line-dashed" style={{ borderTopColor: "#34c759" }} />
-            <span>Slower population scenario</span>
+            <span>Healthy lifestyle scenario</span>
           </div>
         )}
       </div>

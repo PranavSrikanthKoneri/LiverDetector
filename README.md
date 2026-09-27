@@ -74,7 +74,8 @@ not an authenticated production service.
 
 The dashboard shows questionnaire-only `p_ge_F2` and tier prominently. MRI fat
 and texture are separate measurements, not risk-model inputs. Projection curves
-are population scenarios; the actual scan preview does not change with the slider.
+are population scenarios; the original scan is unchanged. An optional, liver-only illustrative overlay
+changes shading with the slider; it is not a prediction of future MRI appearance.
 Recommendations are deterministic placeholder text; no LLM is connected.
 
 ## CLI and tests

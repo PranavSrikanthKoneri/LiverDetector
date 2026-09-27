@@ -8,6 +8,7 @@ import FibrosisPanel from "../components/FibrosisPanel";
 import BiomarkerPanel from "../components/BiomarkerPanel";
 import TriagePanel from "../components/TriagePanel";
 import ProgressionChart from "../components/ProgressionChart";
+import { projectionAtYear } from "../api/projectionDisplay.js";
 import MriViewer from "../components/MriViewer";
 import "./DashboardPage.css";
 
@@ -21,8 +22,7 @@ export default function DashboardPage({ result, onReset }) {
   const { segmentation, prediction, progression } = result;
 
   // Calculate projected stage for the MRI viewer visualization
-  const currentProjection = showIntervention ? progression.intervention : progression.baseline;
-  const projectedStageValue = currentProjection.find(p => p.year === years)?.stage_value || prediction.stage_value || 0;
+  const projectedStageValue = projectionAtYear(progression, years, showIntervention);
 
   return (
     <div className="dashboard-page">
@@ -106,6 +106,7 @@ export default function DashboardPage({ result, onReset }) {
                 segmentation={segmentation}
                 projectedStageValue={projectedStageValue}
                 years={years}
+                lifestyleScenario={showIntervention}
               />
             </div>
           </div>
@@ -147,6 +148,7 @@ export default function DashboardPage({ result, onReset }) {
                   segmentation={segmentation}
                   projectedStageValue={projectedStageValue}
                   years={years}
+                  lifestyleScenario={showIntervention}
                 />
               </div>
 

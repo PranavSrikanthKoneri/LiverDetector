@@ -165,3 +165,19 @@ labelled High alcohol intake, not an emergency or a diagnosis. The backend also
 returns `alcohol_consumption.warning` (null for Low), and both UI compatibility
 rendering and backend messages use `alcohol_policy.json`. Other model inputs and
 predictions are unchanged.
+
+## Optional projection visualization
+
+Each preview now includes `projectionMask`, a PNG whose RGB is black and whose
+alpha channel is 255 only inside the selected liver mask. The frontend can
+optionally composite it over the scan using opacity `0.6 * clamp(stage, 0, 4)/4`.
+The value is taken from the exact selected year and baseline/slower scenario.
+This layer defaults off, never changes the source image or numerical measurements,
+and is labelled illustrative rather than a predicted future MRI. Older results
+without this mask cannot enable the overlay.
+
+The slower curve is displayed as Healthy lifestyle scenario (illustrative). This
+is a presentation label for the existing population curve, not a newly validated
+lifestyle intervention model or a promise of individual benefit. Backend curve
+calculations and risk predictions are unchanged. Texture QC remains in API output
+even though its status line has been removed from the biomarker card.
