@@ -99,13 +99,14 @@ one per year from 0 to 20, for the slider and the Recharts band. Use
     "texture_quality": {...}, "texture_label": "exploratory",
     "masks": {"slice_index": {"width": int, "height": int, "liverPixels": int, "image": "PNG data URL", "overlay": "PNG data URL"}}
   },
+  "alcohol_consumption": {"category": "low|elevated|critical", "label": str, "drinks_week": float, "sex_label": str, "model_independent": true, "ranges": [...], "range_note": str, "caveat": str},
   "risk": {"stage": "F0-F1", "probs": [4 floats], "p_ge_F2": float, "tier": "low|intermediate|high"},
   "projection": {
     "start_stage": "F0-F1", "source": "Singh et al. 2015; ...",
     "typical": [{"years": 0, "stage_value": 0.5, "low": ..., "high": ..., "years_per_stage": 7.1}, ...],
     "slower":  [... same, years_per_stage 14.3 ...]
   },
-  "recommendation": {"tier": ..., "headline": str, "points": [str], "disclaimer": str, "alcohol_caveat": {...}},
+  "recommendation": {"tier": ..., "headline": str, "points": [str], "disclaimer": str},
   "disclaimer": str
 }
 ```
@@ -127,13 +128,26 @@ one per year from 0 to 20, for the slider and the Recharts band. Use
 - **Wrong scan type:** an upload without an in-phase/opposed-phase T1 series
   raises a readable `ValueError`. Show that message to the user.
 
-## Alcohol caveat and risk display
+## Alcohol information in results
 
-`recommendation.alcohol_caveat` comes from `backend/demo/alcohol_guidance.json`.
-The frontend imports the same file for the questionnaire and displays the returned
-caveat in the report. It includes U.S. standard-drink definitions, weekly heavy-
-drinking thresholds and source links. Below-threshold drinking is not labelled
-safe, and >20 drinks/week is not treated as a separate severity diagnosis.
-This is explanatory context; it does not change model probabilities or tiers.
-The dashboard shows the main risk percentage once; the recommendation headline
-uses the tier without repeating that percentage.
+The backend returns `alcohol_consumption` separately from `risk` and
+`recommendation`. `demo/alcohol.py` computes this informational category directly
+from the submitted `male` and `drinks_week` values. It neither changes the
+questionnaire nor injects a category into the trained model. The existing model
+still receives its original inputs, including the existing drinks feature.
+
+Project-defined categories: Low risk for women below 8 drinks/week and men below
+15 (0–7 and 0–14 for whole drinks); Elevated at 8 and 15 respectively; Critical
+at 20 or more for either sex. Critical overrides Elevated. Fractional averages
+are compared directly with the cutoffs, without rounding. Invalid values raise
+an error instead of defaulting to Low risk.
+
+The frontend displays the backend category, submitted drink count and applicable
+sex range in a separate results card in both dashboard views. The questionnaire
+contains the original intake field but no category table or alcohol caveat.
+These labels are project-defined information, not validated disease probabilities,
+clinical severity categories or new model outputs. Low risk does not imply safe
+consumption. No training or model-weight changes are involved.
+
+The dashboard shows the main questionnaire risk percentage once; the summary
+headline uses the tier without repeating the percentage.

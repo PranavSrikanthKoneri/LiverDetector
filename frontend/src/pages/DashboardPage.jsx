@@ -3,6 +3,7 @@ import {
   ArrowLeftIcon, ComponentInstanceIcon, PersonIcon, MagnifyingGlassIcon,
 } from "@radix-ui/react-icons";
 import Disclaimer from "../components/Disclaimer";
+import AlcoholResult from "../components/AlcoholResult";
 import FibrosisPanel from "../components/FibrosisPanel";
 import BiomarkerPanel from "../components/BiomarkerPanel";
 import TriagePanel from "../components/TriagePanel";
@@ -64,6 +65,7 @@ export default function DashboardPage({ result, onReset }) {
           <div className="dashboard-content" key="pcp">
             <div className="dashboard-main">
               <FibrosisPanel stage={prediction.stage} probs={prediction.probs} pGeF2={prediction.p_ge_F2} tier={prediction.tier} />
+              <AlcoholResult result={result.alcoholConsumption} />
               <TriagePanel recommendation={result.recommendation} />
 
               <BiomarkerPanel
@@ -115,6 +117,7 @@ export default function DashboardPage({ result, onReset }) {
               </div>
 
               <FibrosisPanel stage={prediction.stage} probs={prediction.probs} pGeF2={prediction.p_ge_F2} tier={prediction.tier} simplified />
+              <AlcoholResult result={result.alcoholConsumption} />
               <TriagePanel recommendation={result.recommendation} />
 
               <div className="dashboard-progression-section">

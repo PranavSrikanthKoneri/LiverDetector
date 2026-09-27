@@ -38,3 +38,12 @@ test('patient-level review survives an unflagged displayed slice', () => {
   assert.equal(describeTextureQuality({quality: {status: 'invalid'}}).label, 'Not evaluable');
   assert.equal(describeTextureQuality({quality: {status: 'no_flags_detected'}}).label, 'No flags detected');
 });
+
+test('alcohol category stays separate from model risk in results', () => {
+  const risk = {p_ge_F2: .02, tier: 'low'};
+  const alcohol = {category: 'critical', label: 'Critical', drinks_week: 20};
+  const result = adaptResult({imaging: {}, risk, alcohol_consumption: alcohol, projection: {typical: [], slower: []}}, {});
+  assert.equal(result.prediction, risk);
+  assert.equal(result.alcoholConsumption, alcohol);
+  assert.equal(result.prediction.tier, 'low');
+});

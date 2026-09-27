@@ -55,7 +55,8 @@ def test_api_upload_cleanup_and_real_contract(measured, monkeypatch, tmp_path):
                                         files={"file": ("scan.zip", b"test zip", "application/zip")})
     assert response.status_code == 200
     assert response.json()["imaging"]["quality_report"]
-    assert response.json()["recommendation"]["alcohol_caveat"]["ranges"][1]["women"] == "8 or more drinks"
+    assert response.json()["alcohol_consumption"]["category"] == "low"
+    assert response.json()["alcohol_consumption"]["drinks_week"] == Q["drinks_week"]
     assert not seen[0].exists()
 
 

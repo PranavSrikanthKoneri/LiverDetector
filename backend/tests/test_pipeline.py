@@ -20,7 +20,7 @@ def mock_imaging(monkeypatch):
 def test_pipeline_json_serializable(mock_imaging):
     r = pipeline.run_pipeline("unused.zip", Q)
     json.dumps(r)  # must not raise: FastAPI returns this as-is
-    assert set(r) == {"imaging", "risk", "projection", "recommendation", "disclaimer"}
+    assert set(r) == {"imaging", "risk", "projection", "recommendation", "disclaimer", "alcohol_consumption"}
     assert r["imaging"]["status"] == "ok"
     assert len(r["projection"]["typical"]) == len(r["projection"]["slower"]) == 21
 
@@ -55,14 +55,3 @@ def test_recommendation_safety_rules(p, liver):
     assert "doctor" in text and rec["disclaimer"]
     for banned in ("medication", "medicine", "drug", "diagnos", "you have fibrosis", "cirrhosis"):
         assert banned not in text
-
-
-def test_alcohol_caveat_survives_low_model_risk():
-    rec = pipeline.recommend({'stage': 'F0-F1', 'p_ge_F2': .02}, FAKE_FAT)
-    caveat = rec['alcohol_caveat']
-    assert caveat['ranges'][1]['women'] == '8 or more drinks'
-    assert caveat['ranges'][1]['men'] == '15 or more drinks'
-    assert 'does not cancel alcohol-related risk' in caveat['caveat']
-    assert 'risk-free' in caveat['ranges'][0]['note']
-    assert 'does not define a separate diagnosis' in caveat['ranges'][2]['note']
-    assert '%' not in rec['headline']  # dashboard risk badge supplies the number once

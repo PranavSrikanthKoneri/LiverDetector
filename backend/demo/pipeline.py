@@ -22,6 +22,7 @@ from pathlib import Path
 from imaging.load import load_and_locate
 from tabular.predict import predict_stage
 from tabular.progression import project
+from demo.alcohol import alcohol_consumption_info
 
 DISCLAIMER = ("Not diagnostic. LiverCast is an educational estimate from population data, "
               "not a medical test. Discuss any concerns with a doctor.")
@@ -32,8 +33,6 @@ DISCLAIMER = ("Not diagnostic. LiverCast is an educational estimate from populat
 #   intermediate 0.10-0.25  22.4% of people, observed >=F2 18.7%
 #   high         p >= 0.25   8.7% of people, observed >=F2 37.9%
 RISK_TIERS = [(0.25, "high"), (0.10, "intermediate"), (0.0, "low")]
-
-ALCOHOL_GUIDANCE = json.loads(Path(__file__).with_name("alcohol_guidance.json").read_text(encoding="utf-8"))
 
 PROJECTION_YEARS = list(range(0, 21))  # frontend slider is 0-20 years
 
@@ -110,8 +109,7 @@ def recommend(risk: dict, liver: dict) -> dict:
         "keeping a healthy weight, and limiting alcohol.",
         "Talk to a doctor before making changes, especially if you have diabetes or other conditions.",
     ]
-    return {"tier": tier, "headline": headline, "points": points, "disclaimer": DISCLAIMER,
-            "alcohol_caveat": ALCOHOL_GUIDANCE}
+    return {"tier": tier, "headline": headline, "points": points, "disclaimer": DISCLAIMER}
 
 
 # ------------------------------------------------------------ pipeline
@@ -135,6 +133,7 @@ def run_pipeline(zip_path: str, questionnaire: dict) -> dict:
             "spacing_mm": list(img["spacing"]),
             **liver,
         },
+        "alcohol_consumption": alcohol_consumption_info(questionnaire),
         "risk": {**risk, "tier": risk_tier(risk["p_ge_F2"])},
         "projection": {"start_stage": risk["stage"], "source": project(risk["stage"], 0, True)["source"],
                        **projection},

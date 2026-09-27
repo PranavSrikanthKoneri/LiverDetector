@@ -8,6 +8,7 @@ export function adaptResult(result, patient, uploadName = "") {
       filename,
     },
     patient,
+    alcoholConsumption: result.alcohol_consumption,
     segmentation: result.imaging,
     prediction: result.risk,
     progression: {
