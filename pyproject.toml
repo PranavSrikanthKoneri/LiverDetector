@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "livercast-backend"
 version = "0.1.0"
-description = "LiverCast research demo backend"
+description = "FibroLens research demo backend"
 requires-python = ">=3.10"
 dynamic = ["dependencies"]
 

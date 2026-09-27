@@ -1,4 +1,4 @@
-# LiverCast
+# FibroLens
 
 Research demo combining dual-echo MRI measurements with a separate questionnaire
 fibrosis-risk model. **Not diagnostic.** Texture is exploratory; the two-echo fat

@@ -1,4 +1,4 @@
-"""LiverCast end-to-end demo pipeline: DICOM zip + questionnaire -> JSON result.
+"""FibroLens end-to-end demo pipeline: DICOM zip + questionnaire -> JSON result.
 
     python -m demo.pipeline path/to/case.zip --questionnaire demo/example_questionnaire.json
 
@@ -24,7 +24,7 @@ from tabular.predict import predict_stage
 from tabular.progression import project
 from demo.alcohol import alcohol_consumption_info
 
-DISCLAIMER = ("Not diagnostic. LiverCast is an educational estimate from population data, "
+DISCLAIMER = ("Not diagnostic. FibroLens is an educational estimate from population data, "
               "not a medical test. Discuss any concerns with a doctor.")
 
 # p_ge_F2 risk tiers. Cut-offs chosen by Person 3; observed rate of >=F2 in each tier
@@ -143,7 +143,7 @@ def run_pipeline(zip_path: str, questionnaire: dict) -> dict:
 
 
 def main():
-    ap = argparse.ArgumentParser(description="Run the LiverCast demo pipeline on one case.")
+    ap = argparse.ArgumentParser(description="Run the FibroLens demo pipeline on one case.")
     ap.add_argument("zip_path")
     ap.add_argument("--questionnaire", required=True, help="JSON file with the 6 questionnaire answers")
     ap.add_argument("--out", help="also write the JSON result here")

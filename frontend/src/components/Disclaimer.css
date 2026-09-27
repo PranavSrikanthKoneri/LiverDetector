@@ -1,2 +1,15 @@
-/* Disclaimer.css — no extra styles needed beyond index.css tokens,
-   but we keep this for component-specific overrides */
+/* Opaque, high-contrast informational banner; does not recolor error banners. */
+.site-disclaimer.disclaimer-banner {
+  background: #eef4fb;
+  color: #243b53;
+  border: 1px solid #cbd5e1;
+  align-items: flex-start;
+}
+.site-disclaimer.disclaimer-banner strong { color: #102a43; }
+.site-disclaimer.disclaimer-banner svg { color: #334e68; margin-top: 2px; }
+.site-disclaimer.disclaimer-banner-persistent {
+  background: #eef4fb;
+  border-width: 0 0 1px;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}

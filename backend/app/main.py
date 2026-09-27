@@ -10,7 +10,7 @@ from fastapi import FastAPI, File, Form, HTTPException, UploadFile
 from demo.pipeline import run_pipeline
 from tabular.predict import validate
 
-app = FastAPI(title="LiverCast", version="0.1.0")
+app = FastAPI(title="FibroLens", version="0.1.0")
 _inference_lock = Lock()
 MAX_UPLOAD_BYTES = 512 * 1024 * 1024
 

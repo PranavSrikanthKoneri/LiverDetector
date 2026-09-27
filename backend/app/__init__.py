@@ -1,1 +1,1 @@
-"""HTTP adapter for the LiverCast demo pipeline."""
+"""HTTP adapter for the FibroLens demo pipeline."""

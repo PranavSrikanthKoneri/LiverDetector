@@ -47,3 +47,23 @@ test('alcohol category stays separate from model risk in results', () => {
   assert.equal(result.alcoholConsumption, alcohol);
   assert.equal(result.prediction.tier, 'low');
 });
+
+import { alcoholFromAnswers } from './alcohol.js';
+
+test('older API without alcohol data still displays the submitted consumption', () => {
+  const risk = {p_ge_F2: .07};
+  const result = adaptResult({imaging: {}, risk, projection: {typical: [], slower: []}, recommendation: {disclaimer: 'Not diagnostic. LiverCast demo.'}}, {male: 0, drinks_week: 20});
+  assert.equal(result.alcoholConsumption.category, 'critical');
+  assert.equal(result.alcoholConsumption.drinks_week, 20);
+  assert.equal(result.prediction, risk);
+  assert.equal(result.recommendation.disclaimer, 'Not diagnostic. FibroLens demo.');
+});
+
+test('compatibility calculation uses exact cutoffs and rejects missing answers', () => {
+  for (const [male, drinks_week, category] of [[0, 0, 'low'], [0, 7.9, 'low'], [0, 8, 'elevated'], [1, 14.9, 'low'], [1, 15, 'elevated'], [0, 20, 'critical'], [1, 20, 'critical']]) {
+    assert.equal(alcoholFromAnswers({male, drinks_week}).category, category);
+  }
+  for (const answers of [undefined, {}, {male: 1}, {male: 1, drinks_week: NaN}, {male: true, drinks_week: 0}, {male: 1, drinks_week: -1}]) {
+    assert.equal(alcoholFromAnswers(answers), null);
+  }
+});

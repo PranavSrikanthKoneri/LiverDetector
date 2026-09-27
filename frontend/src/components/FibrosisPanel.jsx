@@ -26,9 +26,9 @@ export default function FibrosisPanel({ stage, probs, pGeF2, tier, simplified = 
         <div className="fibrosis-stage-badge" style={{ "--stage-color": config.color }}>
           <span className="fibrosis-stage-value">{confidencePct}%</span>
           <span className="fibrosis-stage-level">{tier} risk of ≥F2 (proxy labels)</span>
+          <small className="fibrosis-stage-note">Questionnaire only · Not diagnostic</small>
         </div>
 
-        <p className="text-tertiary">Questionnaire only; not diagnostic</p>
       </div>
 
       {!simplified && (

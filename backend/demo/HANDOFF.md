@@ -1,4 +1,4 @@
-# LiverCast demo pipeline: handoff
+# FibroLens demo pipeline: handoff
 
 Read this before changing `backend/demo/pipeline.py`, whether you are a person or a
 coding agent. It describes what is finished, what is pending, and the rules
@@ -143,7 +143,10 @@ are compared directly with the cutoffs, without rounding. Invalid values raise
 an error instead of defaulting to Low risk.
 
 The frontend displays the backend category, submitted drink count and applicable
-sex range in a separate results card in both dashboard views. The questionnaire
+sex range in a separate results card in both dashboard views. If an older API
+omits `alcohol_consumption`, it derives the same informational category from
+the submitted answers. Both implementations use `demo/alcohol_policy.json`;
+missing or invalid answers remain unavailable rather than defaulting to Low risk. The questionnaire
 contains the original intake field but no category table or alcohol caveat.
 These labels are project-defined information, not validated disease probabilities,
 clinical severity categories or new model outputs. Low risk does not imply safe

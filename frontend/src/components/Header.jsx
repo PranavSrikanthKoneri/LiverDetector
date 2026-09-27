@@ -9,7 +9,7 @@ export default function Header({ currentStep }) {
       <div className="container header-inner">
         <div className="header-brand">
           <ActivityLogIcon width={18} height={18} style={{ color: "var(--accent)" }} />
-          <span className="header-title">HepatoCast</span>
+          <span className="header-title">FibroLens</span>
         </div>
 
         {currentStep !== undefined && (

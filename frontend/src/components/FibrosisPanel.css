@@ -13,6 +13,8 @@
 
 .fibrosis-stage-display {
   display: flex;
+  justify-content: center;
+  width: 100%;
   align-items: center;
   gap: var(--space-6);
 }
@@ -22,9 +24,10 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  min-width: 150px;
-  max-width: 240px;
-  min-height: 120px;
+  width: min(100%, 300px);
+  min-width: 0;
+  min-height: 160px;
+  box-sizing: border-box;
   padding: var(--space-4);
   text-align: center;
   border-radius: var(--radius-xl);
@@ -75,4 +78,12 @@
   font-size: 0.75rem;
   font-weight: 500;
   text-align: right;
+}
+
+.fibrosis-stage-note {
+  display: block;
+  margin-top: 0.65rem;
+  font-size: 0.75rem;
+  line-height: 1.4;
+  color: var(--text-secondary);
 }

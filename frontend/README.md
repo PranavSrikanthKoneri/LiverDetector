@@ -1,6 +1,6 @@
 # Frontend
 
-React/Vite app for the local LiverCast research demo. Requires Node 22.12+ or 24.
+React/Vite app for the local FibroLens research demo. Requires Node 22.12+ or 24.
 
 From the repository root:
 

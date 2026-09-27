@@ -1,7 +1,7 @@
 import "./AlcoholResult.css";
 
 export default function AlcoholResult({ result }) {
-  if (!result) return <section className="alcohol-result"><h3>Alcohol consumption — informational</h3><p>Not available. Run a new analysis to calculate this separate indicator.</p></section>;
+  if (!result) return <section className="alcohol-result"><h3>Alcohol consumption — informational</h3><p>Alcohol information is unavailable because the submitted weekly intake or sex is missing or invalid.</p></section>;
   return (
     <section className="alcohol-result" aria-label="Alcohol consumption information">
       <h3>Alcohol consumption — informational</h3>

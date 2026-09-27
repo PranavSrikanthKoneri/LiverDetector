@@ -8,7 +8,7 @@ import { analyzePatient } from "./api/client";
 import "./App.css";
 
 /**
- * HepatoCast — PCP-facing liver risk assessment workflow.
+ * FibroLens — PCP-facing liver risk assessment workflow.
  *
  * 3-step flow:
  *  1. Upload MRI .zip
