@@ -12,7 +12,7 @@ import "./DashboardPage.css";
 
 export default function DashboardPage({ result, onReset }) {
   const [activeTab, setActiveTab] = useState("pcp");
-  
+
   // Lifted progression state
   const [years, setYears] = useState(10);
   const [showIntervention, setShowIntervention] = useState(false);
@@ -55,12 +55,17 @@ export default function DashboardPage({ result, onReset }) {
           </div>
         </div>
 
+        <div className="dashboard-case" aria-label="Current scan case">
+          <strong>Case: {result.scanIdentity?.label ?? "Unidentified upload"}</strong>
+          {result.scanIdentity?.filename && <span>Uploaded file: {result.scanIdentity.filename}</span>}
+        </div>
+
         {activeTab === "pcp" ? (
           <div className="dashboard-content" key="pcp">
             <div className="dashboard-main">
               <FibrosisPanel stage={prediction.stage} probs={prediction.probs} pGeF2={prediction.p_ge_F2} tier={prediction.tier} />
               <TriagePanel recommendation={result.recommendation} />
-              
+
               <BiomarkerPanel
                 fatPct={segmentation.fat_pct}
                 steatosis={segmentation.steatosis}
@@ -81,9 +86,9 @@ export default function DashboardPage({ result, onReset }) {
                     </p>
                   </div>
                 </div>
-                <ProgressionChart 
-                  baseline={progression.baseline} 
-                  intervention={progression.intervention} 
+                <ProgressionChart
+                  baseline={progression.baseline}
+                  intervention={progression.intervention}
                   years={years}
                   onYearsChange={setYears}
                   showIntervention={showIntervention}
@@ -93,9 +98,11 @@ export default function DashboardPage({ result, onReset }) {
             </div>
 
             <div className="dashboard-sidebar">
-              <MriViewer 
-                segmentation={segmentation} 
-                projectedStageValue={projectedStageValue} 
+              <MriViewer
+                key={segmentation.texture_quality?.image_fingerprint ?? result.scanIdentity?.filename}
+                caseLabel={result.scanIdentity?.label}
+                segmentation={segmentation}
+                projectedStageValue={projectedStageValue}
                 years={years}
               />
             </div>
@@ -120,8 +127,8 @@ export default function DashboardPage({ result, onReset }) {
                     </p>
                   </div>
                 </div>
-                <ProgressionChart 
-                  baseline={progression.baseline} 
+                <ProgressionChart
+                  baseline={progression.baseline}
                   intervention={progression.intervention}
                   years={years}
                   onYearsChange={setYears}
@@ -129,11 +136,13 @@ export default function DashboardPage({ result, onReset }) {
                   onInterventionChange={setShowIntervention}
                 />
               </div>
-              
+
               <div className="dashboard-progression-section">
-                <MriViewer 
-                  segmentation={segmentation} 
-                  projectedStageValue={projectedStageValue} 
+                <MriViewer
+                  key={segmentation.texture_quality?.image_fingerprint ?? result.scanIdentity?.filename}
+                  caseLabel={result.scanIdentity?.label}
+                  segmentation={segmentation}
+                  projectedStageValue={projectedStageValue}
                   years={years}
                 />
               </div>

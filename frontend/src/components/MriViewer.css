@@ -184,3 +184,12 @@
   background: var(--text-primary);
   border-color: var(--text-primary);
 }
+
+.mri-case-heading {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.mri-case-heading p {
+  margin-top: var(--space-2);
+  color: var(--text-secondary);
+}

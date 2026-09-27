@@ -1,7 +1,9 @@
 import { OpacityIcon, TransformIcon, LayersIcon, ActivityLogIcon } from "@radix-ui/react-icons";
 import "./BiomarkerPanel.css";
+import { describeTextureQuality } from "../api/textureDisplay.js";
 
 export default function BiomarkerPanel({ fatPct, steatosis, texture, stage, confidence, warnings = [], textureQuality }) {
+  const qc = describeTextureQuality(textureQuality);
   const confidencePct = (confidence * 100).toFixed(0);
 
   const listItems = [
@@ -15,11 +17,11 @@ export default function BiomarkerPanel({ fatPct, steatosis, texture, stage, conf
     },
     {
       icon: <TransformIcon />,
-      label: "GLCM Texture (exploratory)",
+      label: "Texture entropy (bits, exploratory)",
       value: texture.entropy.toFixed(2),
-      sub: `Contrast ${texture.contrast.toFixed(2)} · Homogeneity ${texture.homogeneity.toFixed(2)} · QC: ${textureQuality?.quality?.status ?? 'unavailable'} ${(textureQuality?.quality?.flags ?? []).join(', ')}`,
-      color: "var(--info)",
-      meter: texture.entropy / 8,
+      sub: `Contrast ${texture.contrast.toFixed(2)} · Homogeneity ${texture.homogeneity.toFixed(2)}`,
+      note: `Patient-level texture QC: ${qc.label}${qc.flags.length ? ' — ' + qc.flags.join('; ') : ''}. Measurement stability only; entropy is not a quality score.`,
+      color: qc.needsReview ? "var(--warning)" : "var(--info)",
     },
     {
       icon: <LayersIcon />,

@@ -11,5 +11,5 @@ export async function analyzePatient({ mriFile, patient }) {
     const body = await response.json().catch(() => ({}));
     throw new Error(typeof body.detail === "string" ? body.detail : `Analysis failed: ${response.status}`);
   }
-  return adaptResult(await response.json(), patient);
+  return adaptResult(await response.json(), patient, mriFile.name);
 }
