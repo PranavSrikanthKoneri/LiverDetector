@@ -22,8 +22,11 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  width: 100px;
-  height: 100px;
+  min-width: 150px;
+  max-width: 240px;
+  min-height: 120px;
+  padding: var(--space-4);
+  text-align: center;
   border-radius: var(--radius-xl);
   border: 1.5px solid var(--stage-color);
   background: var(--bg-primary);
@@ -45,34 +48,6 @@
   text-transform: uppercase;
   letter-spacing: 0.04em;
   margin-top: 4px;
-}
-
-.fibrosis-confidence {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 2px;
-}
-
-.fibrosis-confidence-ring {
-  position: relative;
-  width: 72px;
-  height: 72px;
-}
-
-.fibrosis-confidence-ring svg {
-  width: 100%;
-  height: 100%;
-}
-
-.fibrosis-confidence-value {
-  position: absolute;
-  inset: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 1rem;
-  font-weight: 600;
 }
 
 .fibrosis-probs {

@@ -105,7 +105,7 @@ one per year from 0 to 20, for the slider and the Recharts band. Use
     "typical": [{"years": 0, "stage_value": 0.5, "low": ..., "high": ..., "years_per_stage": 7.1}, ...],
     "slower":  [... same, years_per_stage 14.3 ...]
   },
-  "recommendation": {"tier": ..., "headline": str, "points": [str], "disclaimer": str},
+  "recommendation": {"tier": ..., "headline": str, "points": [str], "disclaimer": str, "alcohol_caveat": {...}},
   "disclaimer": str
 }
 ```
@@ -126,3 +126,14 @@ one per year from 0 to 20, for the slider and the Recharts band. Use
   purpose.
 - **Wrong scan type:** an upload without an in-phase/opposed-phase T1 series
   raises a readable `ValueError`. Show that message to the user.
+
+## Alcohol caveat and risk display
+
+`recommendation.alcohol_caveat` comes from `backend/demo/alcohol_guidance.json`.
+The frontend imports the same file for the questionnaire and displays the returned
+caveat in the report. It includes U.S. standard-drink definitions, weekly heavy-
+drinking thresholds and source links. Below-threshold drinking is not labelled
+safe, and >20 drinks/week is not treated as a separate severity diagnosis.
+This is explanatory context; it does not change model probabilities or tiers.
+The dashboard shows the main risk percentage once; the recommendation headline
+uses the tier without repeating that percentage.

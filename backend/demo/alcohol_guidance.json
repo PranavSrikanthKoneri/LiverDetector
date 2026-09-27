@@ -1,0 +1,16 @@
+{
+  "title": "Alcohol consumption caveat",
+  "intro": "Weekly drinking ranges describe consumption, not a liver diagnosis or a guarantee of safety.",
+  "ranges": [
+    {"label": "Below the weekly heavy-drinking threshold", "women": "Fewer than 8 drinks", "men": "Fewer than 15 drinks", "note": "For whole drinks, this is 0–7 and 0–14 respectively. Below the threshold does not mean risk-free."},
+    {"label": "Heavy drinking", "women": "8 or more drinks", "men": "15 or more drinks", "note": "This level of consumption increases health risks, including liver disease."},
+    {"label": "More than 20 drinks per week", "women": "More than 20 drinks", "men": "More than 20 drinks", "note": "Exceeds both weekly heavy-drinking thresholds; it does not define a separate diagnosis or severity stage."}
+  ],
+  "standard_drink": "These are U.S. standard drinks: 14 g of pure alcohol each. A large serving or strong beverage may contain more than one standard drink.",
+  "caveat": "Weekly totals do not capture binge drinking. A low questionnaire risk estimate does not cancel alcohol-related risk. This model's alcohol association must not be interpreted as a protective effect of drinking.",
+  "sources": [
+    {"label": "CDC: alcohol use and health", "url": "https://www.cdc.gov/alcohol/about-alcohol-use/index.html"},
+    {"label": "NIAAA: standard drinks", "url": "https://www.niaaa.nih.gov/alcohols-effects-health/what-standard-drink"},
+    {"label": "NIAAA: binge drinking", "url": "https://www.niaaa.nih.gov/publications/brochures-and-fact-sheets/binge-drinking"}
+  ]
+}

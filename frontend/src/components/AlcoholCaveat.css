@@ -1,0 +1,17 @@
+.alcohol-caveat {
+  padding: var(--space-4);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--bg-elevated);
+  font-size: 0.875rem;
+  line-height: 1.6;
+}
+.alcohol-caveat p { margin: 0.5rem 0; }
+.alcohol-caveat summary { cursor: pointer; font-weight: 600; }
+.alcohol-table-scroll { overflow-x: auto; }
+.alcohol-caveat table { width: 100%; border-collapse: collapse; margin: 0.75rem 0; }
+.alcohol-caveat th, .alcohol-caveat td {
+  padding: 0.6rem; text-align: left; vertical-align: top; border-bottom: 1px solid var(--border);
+}
+.alcohol-caveat caption { text-align: left; font-weight: 600; }
+.alcohol-sources { display: flex; flex-wrap: wrap; gap: 0.75rem; }

@@ -28,24 +28,7 @@ export default function FibrosisPanel({ stage, probs, pGeF2, tier, simplified = 
           <span className="fibrosis-stage-level">{tier} risk of ≥F2 (proxy labels)</span>
         </div>
 
-        <div className="fibrosis-confidence">
-          <div className="fibrosis-confidence-ring">
-            <svg viewBox="0 0 72 72">
-              <circle cx="36" cy="36" r="30" fill="none" stroke="var(--bg-hover)" strokeWidth="4" />
-              <circle
-                cx="36" cy="36" r="30"
-                fill="none"
-                stroke={config.color}
-                strokeWidth="4"
-                strokeLinecap="round"
-                strokeDasharray={`${confidence * 188.5} 188.5`}
-                transform="rotate(-90 36 36)"
-              />
-            </svg>
-            <span className="fibrosis-confidence-value mono">{confidencePct}%</span>
-          </div>
-          <span className="text-tertiary" style={{ fontSize: "0.6875rem" }}>Questionnaire only; not diagnostic</span>
-        </div>
+        <p className="text-tertiary">Questionnaire only; not diagnostic</p>
       </div>
 
       {!simplified && (

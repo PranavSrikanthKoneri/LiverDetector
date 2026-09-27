@@ -33,6 +33,8 @@ DISCLAIMER = ("Not diagnostic. LiverCast is an educational estimate from populat
 #   high         p >= 0.25   8.7% of people, observed >=F2 37.9%
 RISK_TIERS = [(0.25, "high"), (0.10, "intermediate"), (0.0, "low")]
 
+ALCOHOL_GUIDANCE = json.loads(Path(__file__).with_name("alcohol_guidance.json").read_text(encoding="utf-8"))
+
 PROJECTION_YEARS = list(range(0, 21))  # frontend slider is 0-20 years
 
 
@@ -85,11 +87,10 @@ def recommend(risk: dict, liver: dict) -> dict:
       - imaging (fat %) is shown alongside the risk, it is not an input to it
     """
     tier = risk_tier(risk["p_ge_F2"])
-    pct = round(100 * risk["p_ge_F2"])
     headline = {
-        "low": f"Your answers suggest a lower chance ({pct}%) of significant liver scarring.",
-        "intermediate": f"Your answers suggest a moderate chance ({pct}%) of significant liver scarring.",
-        "high": f"Your answers suggest a higher chance ({pct}%) of significant liver scarring.",
+        "low": "Your answers suggest a lower chance of significant liver scarring.",
+        "intermediate": "Your answers suggest a moderate chance of significant liver scarring.",
+        "high": "Your answers suggest a higher chance of significant liver scarring.",
     }[tier]
 
     points = []
@@ -109,7 +110,8 @@ def recommend(risk: dict, liver: dict) -> dict:
         "keeping a healthy weight, and limiting alcohol.",
         "Talk to a doctor before making changes, especially if you have diabetes or other conditions.",
     ]
-    return {"tier": tier, "headline": headline, "points": points, "disclaimer": DISCLAIMER}
+    return {"tier": tier, "headline": headline, "points": points, "disclaimer": DISCLAIMER,
+            "alcohol_caveat": ALCOHOL_GUIDANCE}
 
 
 # ------------------------------------------------------------ pipeline

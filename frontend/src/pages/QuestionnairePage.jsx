@@ -1,3 +1,4 @@
+import AlcoholCaveat from "../components/AlcoholCaveat";
 import { useState } from "react";
 import { ArrowRightIcon, ArrowLeftIcon } from "@radix-ui/react-icons";
 import "./QuestionnairePage.css";
@@ -113,7 +114,7 @@ export default function QuestionnairePage({ onBack, onSubmit }) {
             </div>
 
             <div className="input-group">
-              <label className="input-label" htmlFor="q-drinks">Weekly Alcohol Intake (drinks)</label>
+              <label className="input-label" htmlFor="q-drinks">Weekly Alcohol Intake (U.S. standard drinks)</label>
               <input
                 id="q-drinks"
                 className={`input-field ${errors.drinks_week ? "input-error" : ""}`}
@@ -124,6 +125,7 @@ export default function QuestionnairePage({ onBack, onSubmit }) {
                 onChange={(e) => update("drinks_week", e.target.value)}
               />
               {errors.drinks_week && <span className="input-error-msg">{errors.drinks_week}</span>}
+              <AlcoholCaveat />
             </div>
 
             <div className="input-group">

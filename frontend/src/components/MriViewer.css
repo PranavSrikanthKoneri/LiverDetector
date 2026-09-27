@@ -158,6 +158,8 @@
 }
 
 .mri-nav {
+  width: 100%;
+  align-self: center;
   display: flex;
   align-items: center;
   gap: var(--space-3);
