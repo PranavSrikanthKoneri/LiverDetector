@@ -1,0 +1,106 @@
+.upload-hero {
+  text-align: center;
+  max-width: 480px;
+  margin: 0 auto;
+}
+
+.upload-hero h2 {
+  margin-bottom: var(--space-2);
+}
+
+/* Dropzone */
+.upload-dropzone {
+  max-width: 520px;
+  margin: 0 auto;
+  padding: var(--space-16) var(--space-8);
+  text-align: center;
+  cursor: pointer;
+  transition: border-color var(--duration-fast) var(--ease);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .upload-dropzone:hover {
+    border-color: var(--border-hover);
+  }
+}
+
+.upload-dropzone.drag-active {
+  border-color: var(--accent);
+  background: var(--accent-muted);
+}
+
+.upload-dropzone.has-file {
+  cursor: default;
+  padding: var(--space-6);
+}
+
+.upload-dropzone-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-4);
+}
+
+.upload-icon-ring {
+  width: 56px;
+  height: 56px;
+  border-radius: var(--radius-md);
+  background: var(--bg-primary);
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-secondary);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.upload-dropzone.drag-active .upload-icon-ring {
+  border-color: var(--accent);
+  color: var(--accent);
+  box-shadow: 0 4px 12px var(--accent-muted);
+}
+
+.upload-dropzone-title {
+  font-size: 0.9375rem;
+  font-weight: 500;
+}
+
+/* File info */
+.upload-file-info {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  width: 100%;
+}
+
+.upload-file-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius-md);
+  background: var(--accent-muted);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--accent);
+  flex-shrink: 0;
+}
+
+.upload-file-details {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  text-align: left;
+}
+
+.upload-file-name {
+  font-weight: 500;
+  font-size: 0.875rem;
+}
+
+/* Actions */
+.upload-actions {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-3);
+}

@@ -1,0 +1,84 @@
+.app-header {
+  padding: 12px 0;
+  background: rgba(255, 255, 255, 0.72);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+  position: sticky;
+  top: 0;
+  z-index: 50;
+}
+
+.header-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.header-brand {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.header-title {
+  font-size: 0.9375rem;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+}
+
+/* Step indicators */
+.header-steps {
+  display: flex;
+  gap: var(--space-6);
+}
+
+.header-step {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  color: var(--text-tertiary);
+}
+
+.header-step.active {
+  color: var(--text-primary);
+}
+
+.header-step.completed {
+  color: var(--text-secondary);
+}
+
+.header-step-num {
+  width: 22px;
+  height: 22px;
+  border-radius: var(--radius-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+}
+
+.header-step.active .header-step-num {
+  background: var(--text-primary);
+  border-color: var(--text-primary);
+  color: var(--bg-primary);
+}
+
+.header-step.completed .header-step-num {
+  background: var(--bg-hover);
+  border-color: var(--border-hover);
+  color: var(--text-secondary);
+}
+
+.header-step-label {
+  font-size: 0.8125rem;
+  font-weight: 500;
+}
+
+@media (max-width: 640px) {
+  .header-steps { gap: var(--space-4); }
+  .header-step-label { display: none; }
+}

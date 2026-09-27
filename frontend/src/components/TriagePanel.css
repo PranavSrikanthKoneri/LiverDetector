@@ -1,0 +1,47 @@
+.triage-panel {
+  padding: var(--space-6);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+}
+
+.triage-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-weight: 600;
+  font-size: 0.875rem;
+  color: var(--triage-color);
+}
+
+.triage-body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.triage-body > p {
+  font-size: 0.875rem;
+  line-height: 1.6;
+}
+
+.triage-action {
+  display: flex;
+  gap: var(--space-2);
+  padding: var(--space-4);
+  background: var(--bg-primary);
+  border-radius: var(--radius-md);
+  border-left: 2px solid;
+}
+
+.triage-action p {
+  font-size: 0.8125rem;
+  color: var(--text-primary);
+  line-height: 1.6;
+}
+
+.triage-footnote {
+  font-size: 0.6875rem;
+  line-height: 1.5;
+  font-style: italic;
+}

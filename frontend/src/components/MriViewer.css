@@ -1,0 +1,186 @@
+.mri-viewer {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+}
+
+.mri-viewer-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+}
+
+.mri-viewer-body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.mri-projection-banner {
+  text-align: center;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  background: var(--bg-elevated);
+  padding: 6px 12px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+  transition: opacity 0.4s var(--ease);
+}
+
+.mri-canvas-wrapper {
+  display: flex;
+  justify-content: center;
+}
+
+.mri-canvas {
+  position: relative;
+  width: 280px;
+  height: 280px;
+  background: #000000;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  border: 1px solid var(--border);
+}
+
+.mri-body-outline {
+  position: absolute;
+  inset: 28px;
+  border-radius: 50%;
+  border: 1px solid hsla(0, 0%, 100%, 0.06);
+  background: radial-gradient(
+    ellipse at 50% 50%,
+    hsla(0, 0%, 100%, 0.02),
+    transparent
+  );
+}
+
+.mri-spine {
+  position: absolute;
+  bottom: 15%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: hsla(0, 0%, 100%, 0.04);
+}
+
+.mri-organ {
+  position: absolute;
+  border-radius: 40%;
+  background: hsla(0, 0%, 100%, 0.03);
+  border: 1px solid hsla(0, 0%, 100%, 0.04);
+}
+
+.mri-kidney-l {
+  width: 24px;
+  height: 36px;
+  bottom: 25%;
+  left: 12%;
+  transform: rotate(-8deg);
+}
+
+.mri-kidney-r {
+  width: 24px;
+  height: 36px;
+  bottom: 28%;
+  right: 12%;
+  transform: rotate(8deg);
+}
+
+.mri-liver {
+  position: absolute;
+  top: 15%;
+  right: 10%;
+  width: 55%;
+  height: 42%;
+  border-radius: 35% 25% 40% 30%;
+  background: hsla(0, 0%, 100%, 0.03);
+  border: 1px solid hsla(0, 0%, 100%, 0.06);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* Scale shrinks the liver as it becomes cirrhotic */
+  transform: scale(calc(1 - var(--degradation, 0) * 0.15));
+  transition: transform 0.4s var(--ease-out), background 0.4s var(--ease), border-color 0.4s var(--ease);
+  overflow: hidden;
+}
+
+.mri-liver.show-overlay {
+  background: hsla(187, 72%, 53%, 0.08);
+  border-color: hsla(187, 72%, 53%, 0.25);
+}
+
+.mri-liver-scarring {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background-image: radial-gradient(circle, #fff 10%, transparent 20%), radial-gradient(circle, #fff 10%, transparent 20%);
+  background-size: 6px 6px;
+  background-position: 0 0, 3px 3px;
+  opacity: calc(var(--degradation, 0) * 0.7);
+  mix-blend-mode: overlay;
+  transition: opacity 0.4s var(--ease);
+  pointer-events: none;
+}
+
+.mri-slice-label {
+  position: absolute;
+  top: 6px;
+  left: 8px;
+  font-size: 0.625rem;
+  color: var(--text-tertiary);
+}
+
+.mri-pixel-label {
+  position: absolute;
+  top: 6px;
+  right: 8px;
+  font-size: 0.625rem;
+  color: var(--accent);
+  transition: color 0.4s var(--ease);
+}
+
+.mri-mock-label {
+  position: absolute;
+  bottom: 6px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 0.5625rem;
+  font-weight: 600;
+  color: var(--text-tertiary);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  opacity: 0.5;
+}
+
+.mri-nav {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  justify-content: center;
+}
+
+.mri-slice-indicators {
+  display: flex;
+  gap: 4px;
+}
+
+.mri-slice-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  cursor: pointer;
+  padding: 0;
+  transition: background var(--duration-fast) var(--ease);
+}
+
+.mri-slice-dot.active {
+  background: var(--text-primary);
+  border-color: var(--text-primary);
+}

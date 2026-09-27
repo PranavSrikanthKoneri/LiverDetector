@@ -1,0 +1,103 @@
+.progression-chart {
+  padding: var(--space-6);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+}
+
+.progression-controls {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: var(--space-6);
+  flex-wrap: wrap;
+}
+
+.progression-slider-group {
+  flex: 1;
+  min-width: 180px;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.progression-slider-row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.progression-slider-row input[type="range"] {
+  flex: 1;
+}
+
+.progression-year-display {
+  min-width: 44px;
+  text-align: center;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  background: var(--bg-elevated);
+  padding: 3px 10px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+}
+
+.progression-toggle-label {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.progression-chart-container {
+  width: 100%;
+}
+
+/* Tooltip */
+.progression-tooltip {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: var(--space-3);
+  min-width: 160px;
+}
+
+.progression-tooltip-title {
+  font-size: 0.75rem;
+  font-weight: 600;
+  margin-bottom: var(--space-2);
+}
+
+.progression-tooltip-row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: 0.75rem;
+}
+
+/* Legend */
+.progression-legend {
+  display: flex;
+  align-items: center;
+  gap: var(--space-5);
+  flex-wrap: wrap;
+}
+
+.progression-legend-item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+}
+
+.progression-legend-line {
+  width: 20px;
+  height: 2px;
+  border-radius: 1px;
+}
+
+.progression-legend-line-dashed {
+  background: none !important;
+  border-top: 2px dashed #4ade80;
+}

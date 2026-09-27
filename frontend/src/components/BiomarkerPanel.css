@@ -1,0 +1,79 @@
+.biomarker-panel {
+  display: flex;
+  flex-direction: column;
+}
+
+.biomarker-list {
+  display: flex;
+  flex-direction: column;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.04);
+}
+
+.biomarker-list-item {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-4);
+  padding: var(--space-4);
+  border-bottom: 1px solid var(--border);
+}
+
+.biomarker-list-item:last-child {
+  border-bottom: none;
+}
+
+.biomarker-item-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  background: var(--bg-primary);
+  border-radius: var(--radius-sm);
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.biomarker-item-icon svg {
+  width: 18px;
+  height: 18px;
+}
+
+.biomarker-item-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.biomarker-item-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+}
+
+.biomarker-item-label {
+  font-weight: 500;
+  color: var(--text-primary);
+}
+
+.biomarker-item-value {
+  font-weight: 300;
+  font-size: 2rem;
+  line-height: 1;
+}
+
+.biomarker-item-sub {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.8125rem;
+  color: var(--text-secondary);
+}
+
+.biomarker-item-note {
+  font-size: 0.75rem;
+  font-style: italic;
+  color: var(--text-tertiary);
+}

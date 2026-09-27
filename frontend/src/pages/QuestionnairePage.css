@@ -1,0 +1,39 @@
+.questionnaire-hero {
+  text-align: center;
+  max-width: 480px;
+  margin: 0 auto;
+}
+
+.questionnaire-form {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: var(--space-8);
+}
+
+.questionnaire-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--space-5);
+  margin-bottom: var(--space-8);
+}
+
+@media (max-width: 640px) {
+  .questionnaire-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.input-error {
+  border-color: var(--danger) !important;
+}
+
+.input-error-msg {
+  font-size: 0.75rem;
+  color: var(--danger);
+}
+
+.questionnaire-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
