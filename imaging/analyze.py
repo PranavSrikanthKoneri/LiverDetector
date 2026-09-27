@@ -3,7 +3,7 @@
 Segmentation integration check (all kept slices):
     python -m imaging.analyze case.zip --checkpoint /path/to/medsam_vit_b.pth
 
-Includes the project-specified Dixon calculation; texture is still pending.
+Includes the project-specified Dixon calculation and exploratory GLCM texture.
 """
 
 from pathlib import Path
@@ -196,6 +196,89 @@ def summarize_fat(slice_percentages):
     return {"fat_pct": fat_pct, "steatosis": bool(fat_pct > 5.0)}
 
 
+
+def measure_texture_slice(ip_slice, mask):
+    """Exploratory liver texture, not a staging or image-quality score.
+
+    Symmetric 32-level GLCMs use only pairs whose endpoints are both inside
+    the finite, nonnegative, radius-3-eroded liver ROI. Window to the ROI's
+    1st/99th percentiles per slice, then equally average four directions.
+    Native pixel offsets (dy, dx): (0,1), (1,1), (1,0), (1,-1).
+    Entropy uses log2 (bits). Input arrays are never modified.
+    """
+    from scipy.ndimage import binary_erosion
+
+    image = np.asarray(ip_slice, dtype=np.float64)
+    mask = np.asarray(mask)
+    if image.ndim != 2 or image.shape != mask.shape:
+        raise ValueError("IP and mask must have identical 2D shapes")
+    if not np.isfinite(mask).all() or not np.isin(mask, [0, 1]).all():
+        raise ValueError("Expected a finite binary liver mask")
+    yy, xx = np.ogrid[-3:4, -3:4]
+    eroded = binary_erosion(mask.astype(bool), structure=xx**2 + yy**2 <= 9,
+                            border_value=0)
+    valid = eroded & np.isfinite(image) & (image >= 0)
+    if not valid.any():
+        raise ValueError("No valid texture pixels remain after erosion")
+    values = image[valid]
+    lo, hi = np.percentile(values, [1, 99])
+    # Preserve rare variation if percentile bounds collapse; constant ROIs
+    # correctly have contrast=0, homogeneity=1, entropy=0.
+    if hi <= lo:
+        lo, hi = values.min(), values.max()
+    quantized = np.zeros(image.shape, dtype=np.int64)
+    if hi > lo:
+        quantized[valid] = np.minimum(
+            (np.clip((values - lo) / (hi - lo), 0, 1) * 32).astype(np.int64), 31)
+    offsets = [(0, 1), (1, 1), (1, 0), (1, -1)]
+    h, w = image.shape
+    delta2 = (np.arange(32)[:, None] - np.arange(32)[None, :])**2
+    directions, pair_counts = [], []
+    for dy, dx in offsets:
+        y0, y1 = max(0, -dy), min(h, h - dy)
+        x0, x1 = max(0, -dx), min(w, w - dx)
+        a = (slice(y0, y1), slice(x0, x1))
+        b = (slice(y0 + dy, y1 + dy), slice(x0 + dx, x1 + dx))
+        pairs = valid[a] & valid[b]
+        count = int(pairs.sum())
+        if count == 0:
+            raise ValueError("No valid texture pairs for one or more directions")
+        ids = quantized[a][pairs] * 32 + quantized[b][pairs]
+        counts = np.bincount(ids, minlength=32 * 32).reshape(32, 32)
+        symmetric = counts + counts.T
+        probability = symmetric / symmetric.sum()
+        nonzero = probability[probability > 0]
+        directions.append({
+            "contrast": float(np.sum(probability * delta2)),
+            "homogeneity": float(np.sum(probability / (1 + delta2))),
+            "entropy": float(-np.sum(nonzero * np.log2(nonzero))),
+        })
+        pair_counts.append(count)
+    return summarize_texture(directions), {
+        "label": "exploratory", "input": "in_phase",
+        "gray_levels": 32, "erosion_radius_pixels": 3,
+        "window_method": "per_slice_roi_percentiles_1_99_with_minmax_fallback",
+        "window_low": float(lo), "window_high": float(hi),
+        "valid_pixels": int(valid.sum()),
+        "excluded_pixels": int(eroded.sum() - valid.sum()),
+        "offsets_dy_dx": [list(offset) for offset in offsets],
+        "pair_counts": pair_counts, "symmetric": True,
+        "entropy_units": "bits", "direction_aggregation": "equal_mean",
+        "warnings": ["constant_intensity_roi"] if hi <= lo else [],
+    }
+
+
+def summarize_texture(slice_features):
+    """Equal mean of directional or slice features; no disease thresholds."""
+    names = ("contrast", "homogeneity", "entropy")
+    if not slice_features:
+        raise ValueError("Expected nonempty texture measurements")
+    values = np.asarray([[row[name] for name in names] for row in slice_features],
+                        dtype=np.float64)
+    if not np.isfinite(values).all():
+        raise ValueError("Texture measurements must be finite")
+    return dict(zip(names, map(float, values.mean(axis=0))))
+
 def main():
     """Check kept liver slices; save candidate/selected masks and diagnostics."""
     import argparse
@@ -221,6 +304,7 @@ def main():
     output.mkdir(parents=True, exist_ok=True)
     reports = {}
     slice_percentages = []
+    slice_textures = []
     for idx in slices:
         image, box = inputs["ip"][idx], inputs["boxes"][idx]
         print(f"Running MedSAM on slice {idx}, box {box}", flush=True)
@@ -234,6 +318,10 @@ def main():
             raise ValueError(f"Cannot measure fat on slice {idx}: {exc}") from exc
         report["fat_pct"] = fat_pct
         report["fat_measurement"] = counts
+        texture, texture_details = measure_texture_slice(image, mask)
+        report["texture"] = texture
+        report["texture_measurement"] = texture_details
+        slice_textures.append(texture)
         slice_percentages.append(fat_pct)
         reports[str(idx)] = report
         np.save(output / f"medsam_{idx:03d}.npy", candidate)
@@ -257,6 +345,12 @@ def main():
     (output / "quality_report.json").write_text(json.dumps(reports, indent=2), encoding="utf-8")
     summary = summarize_fat(slice_percentages)
     (output / "fat_summary.json").write_text(json.dumps(summary, indent=2), encoding="utf-8")
+    texture_summary = {"texture": summarize_texture(slice_textures),
+                       "label": "exploratory", "slice_aggregation": "equal_mean",
+                       "slices": [int(idx) for idx in slices]}
+    (output / "texture_summary.json").write_text(
+        json.dumps(texture_summary, indent=2), encoding="utf-8")
+    print(f"Exploratory texture: {json.dumps(texture_summary)}")
     print(f"Fat summary: {json.dumps(summary)}")
     print(f"Saved masks and quality_report.json to {output}")
     print("Previews: yellow = MedSAM candidate; green = TotalSegmentator; red = box")

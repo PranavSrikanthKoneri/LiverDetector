@@ -2,7 +2,8 @@
 import numpy as np
 import pytest
 
-from imaging.analyze import measure_fat_slice, select_mask, summarize_fat
+from imaging.analyze import (measure_fat_slice, select_mask, summarize_fat,
+                             measure_texture_slice, summarize_texture)
 
 
 def reference():
@@ -127,3 +128,55 @@ def test_diagnostics_distinguish_zero_from_negative_clipping(op_value, raw_pct, 
     assert report["op_median"] == op_value
     assert report["op_greater_than_ip_fraction"] == float(clipped)
     assert bool(report["warnings"]) is clipped
+
+
+def test_constant_texture_and_background_invariance():
+    mask = reference()
+    image = np.full(mask.shape, 100.)
+    features, details = measure_texture_slice(image, mask)
+    assert features == {'contrast': 0., 'homogeneity': 1., 'entropy': 0.}
+    assert details['warnings'] == ['constant_intensity_roi']
+    image[~mask] = np.nan
+    other, _ = measure_texture_slice(image, mask)
+    assert other == features
+    assert details['valid_pixels'] == 196
+
+
+def test_checkerboard_texture_has_known_directional_average():
+    # Orthogonal neighbors differ by 31 levels; diagonal neighbors are equal.
+    image = (np.indices((40, 40)).sum(axis=0) % 2).astype(float)
+    original = image.copy()
+    features, details = measure_texture_slice(image, reference())
+    assert features['contrast'] == pytest.approx(31**2 / 2)
+    assert features['homogeneity'] == pytest.approx((1 + 1 / 962) / 2)
+    assert features['entropy'] == pytest.approx(1., abs=0.0001)
+    assert details['pair_counts'] == [182, 169, 182, 169]
+    np.testing.assert_array_equal(image, original)
+
+
+def test_texture_mask_holes_exclude_both_endpoints():
+    mask = reference()
+    mask[19:21, 19:21] = False
+    image = np.indices(mask.shape).sum(axis=0).astype(float)
+    expected, _ = measure_texture_slice(image, mask)
+    image[~mask] = 1e9
+    actual, _ = measure_texture_slice(image, mask)
+    assert actual == expected
+
+
+def test_invalid_texture_rois_fail_instead_of_returning_zero():
+    image = np.ones((40, 40))
+    for mask in [np.zeros((40, 40)), np.ones((3, 3)), np.full((40, 40), .5)]:
+        with pytest.raises(ValueError):
+            measure_texture_slice(image, mask)
+    with pytest.raises(ValueError):
+        measure_texture_slice(image * np.nan, reference())
+    with pytest.raises(ValueError):
+        summarize_texture([])
+
+
+def test_texture_equal_slice_weighting():
+    result = summarize_texture([
+        {'contrast': 2, 'homogeneity': .2, 'entropy': 4},
+        {'contrast': 8, 'homogeneity': .8, 'entropy': 6}])
+    assert result == {'contrast': 5., 'homogeneity': .5, 'entropy': 5.}
